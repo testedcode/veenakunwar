@@ -336,17 +336,48 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
   const handleImageUpload = async (e, type) => {
     const file = e.target.files[0]
     if (!file) return
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File is too large. Maximum size is 10MB.')
+      e.target.value = '' // Reset input
+      return
+    }
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.')
+      e.target.value = '' // Reset input
+      return
+    }
+    
     setUploading(true)
+    const imageType = type === 'qr' ? 'QR Code' : 'Product Image'
+    
     try {
-      const fileName = `${Date.now()}_${file.name}`
+      console.log(`Uploading ${imageType}:`, file.name)
+      const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
       const folder = type === 'qr' ? 'qr' : 'product-images'
       const fileRef = ref(storage, `${folder}/${fileName}`)
+      
+      console.log('Uploading to:', `${folder}/${fileName}`)
       await uploadBytes(fileRef, file)
+      console.log('Upload complete, getting URL...')
+      
       const url = await getDownloadURL(fileRef)
+      console.log('Got URL:', url)
+      
       setFormData({ ...formData, [type === 'qr' ? 'qrURL' : 'imageURL']: url })
+      alert(`✅ ${imageType} uploaded successfully!`)
     } catch (err) {
-      console.error('Upload error:', err)
-      alert('Upload failed. Please try again.')
+      console.error('Upload error details:', {
+        code: err.code,
+        message: err.message,
+        fullError: err
+      })
+      const errorMsg = err.message || err.code || 'Unknown error'
+      alert(`Upload failed: ${errorMsg}\n\nCheck browser console (F12) for details.`)
+      e.target.value = '' // Reset input on error
     } finally {
       setUploading(false)
     }
@@ -449,7 +480,11 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
               placeholder="Custom message for WhatsApp orders"
             ></textarea>
           </div>
-          {uploading && <p>Uploading...</p>}
+          {uploading && (
+            <p style={{ color: 'var(--primary-blue)', fontWeight: 'bold' }}>
+              Uploading image... Please wait.
+            </p>
+          )}
           <div className="form-actions">
             <Button type="submit" variant="primary" disabled={uploading}>
               {editing ? 'Update' : 'Add'} Product
@@ -598,25 +633,56 @@ function TestimonialsPanel({ testimonials, onAdd, onUpdate, onDelete }) {
 
 function GalleryPanel({ uploadFile, urls: galleryUrls, loading: galleryLoading }) {
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState('')
+  const [uploadedCount, setUploadedCount] = useState(0)
 
   const handleUpload = async (e) => {
     const files = Array.from(e.target.files)
     if (files.length === 0) return
+    
     setUploading(true)
+    setUploadProgress(`Starting upload of ${files.length} image(s)...`)
+    setUploadedCount(0)
+    
     try {
-      for (const file of files) {
-        const fileName = `${Date.now()}_${file.name}`
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        setUploadProgress(`Uploading ${i + 1} of ${files.length}: ${file.name}...`)
+        
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error(`File ${file.name} is too large. Maximum size is 10MB.`)
+        }
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          throw new Error(`File ${file.name} is not an image.`)
+        }
+        
+        const fileName = `${Date.now()}_${i}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+        console.log(`Uploading file ${i + 1}/${files.length}:`, fileName)
+        
         await uploadFile(file, fileName)
+        setUploadedCount(i + 1)
+        console.log(`Successfully uploaded: ${fileName}`)
       }
-      alert('Images uploaded successfully! Refresh the page to see them.')
+      
+      setUploadProgress(`Successfully uploaded ${files.length} image(s)!`)
+      alert(`✅ Successfully uploaded ${files.length} image(s)! Refreshing page...`)
       e.target.value = '' // Reset input
-      // Reload page after 1 second to show new images
-      setTimeout(() => window.location.reload(), 1000)
+      
+      // Reload page after 2 seconds to show new images
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
     } catch (err) {
-      console.error('Upload error:', err)
-      alert(`Upload failed: ${err.message || 'Please try again.'}`)
+      console.error('Upload error details:', err)
+      const errorMessage = err.message || err.code || 'Unknown error occurred'
+      setUploadProgress(`❌ Upload failed: ${errorMessage}`)
+      alert(`Upload failed: ${errorMessage}\n\nCheck browser console (F12) for details.`)
     } finally {
       setUploading(false)
+      setTimeout(() => setUploadProgress(''), 5000)
     }
   }
 
@@ -648,7 +714,18 @@ function GalleryPanel({ uploadFile, urls: galleryUrls, loading: galleryLoading }
             onChange={handleUpload}
             disabled={uploading}
           />
-          {uploading && <p style={{ color: 'var(--primary-blue)', fontWeight: 'bold' }}>Uploading images... Please wait.</p>}
+          {uploading && (
+            <div style={{ marginTop: '1rem' }}>
+              <p style={{ color: 'var(--primary-blue)', fontWeight: 'bold' }}>
+                {uploadProgress || 'Uploading images... Please wait.'}
+              </p>
+              {uploadedCount > 0 && (
+                <p style={{ color: 'var(--primary-green)', fontSize: '0.9rem' }}>
+                  Progress: {uploadedCount} image(s) uploaded
+                </p>
+              )}
+            </div>
+          )}
         </div>
         <p className="upload-note">
           You can select multiple images at once. Images will be uploaded to Firebase Storage in the <code>gallery/</code> folder.
