@@ -26,22 +26,32 @@ function Admin() {
     setLoading(true)
     setError('')
     try {
-      await login(email, password)
+      console.log('Attempting login with:', email)
+      const result = await login(email.trim(), password)
+      console.log('Login successful:', result.user)
     } catch (err) {
-      console.error('Login error:', err)
+      console.error('Login error details:', {
+        code: err.code,
+        message: err.message,
+        email: email
+      })
       // Show more specific error messages
       if (err.code === 'auth/user-not-found') {
-        setError('User not found. Please check your email.')
+        setError('User not found. Please check your email address.')
       } else if (err.code === 'auth/wrong-password') {
         setError('Incorrect password. Please try again.')
       } else if (err.code === 'auth/invalid-email') {
-        setError('Invalid email format.')
+        setError('Invalid email format. Please check your email.')
       } else if (err.code === 'auth/user-disabled') {
-        setError('This account has been disabled.')
+        setError('This account has been disabled. Contact support.')
       } else if (err.code === 'auth/too-many-requests') {
         setError('Too many failed attempts. Please try again later.')
+      } else if (err.code === 'auth/operation-not-allowed') {
+        setError('Email/Password authentication is not enabled. Please enable it in Firebase Console.')
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection.')
       } else {
-        setError(err.message || 'Login failed. Please check your credentials.')
+        setError(`Login failed: ${err.message || err.code || 'Unknown error'}. Check console for details.`)
       }
     } finally {
       setLoading(false)
