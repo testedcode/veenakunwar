@@ -1,14 +1,24 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useCollection } from '../hooks/useFirebase'
 import { openWhatsApp, formatProductOrder } from '../utils/whatsapp'
+import { localImages } from '../utils/images'
 import Card from '../components/Card'
 import Loader from '../components/Loader'
 import Button from '../components/Button'
 import './Shop.css'
 
 function Shop() {
-  const { data: products, loading } = useCollection('products')
+  const { data: firebaseProducts, loading } = useCollection('products')
   const [selectedProduct, setSelectedProduct] = useState(null)
+  
+  // Combine Firebase products with local products
+  const products = useMemo(() => {
+    const localProducts = localImages.products.map((product, index) => ({
+      id: `local-${index}`,
+      ...product
+    }))
+    return [...localProducts, ...(firebaseProducts || [])]
+  }, [firebaseProducts])
 
   const handleOrder = (product) => {
     const message = product.whatsappMessage || formatProductOrder(product)
@@ -34,7 +44,7 @@ function Shop() {
 
       <section className="section">
         <div className="container">
-          {loading ? (
+          {loading && products.length === 0 ? (
             <Loader />
           ) : products.length > 0 ? (
             <div className="products-grid">

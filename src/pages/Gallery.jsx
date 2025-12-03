@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { useStorage } from '../hooks/useFirebase'
+import { getGalleryImages } from '../utils/images'
 import Loader from '../components/Loader'
 import './Gallery.css'
 
 function Gallery() {
-  const { urls, loading } = useStorage('gallery')
+  // Use local images instead of Firebase Storage
+  const urls = getGalleryImages()
+  const loading = false
   const [selectedImage, setSelectedImage] = useState(null)
 
   const openLightbox = (image) => {

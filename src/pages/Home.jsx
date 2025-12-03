@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useCollection } from '../hooks/useFirebase'
-import { useStorage } from '../hooks/useFirebase'
+import { getGalleryImages } from '../utils/images'
 import { FACEBOOK_URL, INSTAGRAM_URL } from '../utils/constants'
 import Button from '../components/Button'
 import Card from '../components/Card'
@@ -9,7 +9,9 @@ import './Home.css'
 
 function Home() {
   const { data: testimonials, loading: testimonialsLoading } = useCollection('testimonials')
-  const { urls: galleryUrls, loading: galleryLoading } = useStorage('gallery')
+  // Use local gallery images instead of Firebase Storage
+  const galleryUrls = getGalleryImages()
+  const galleryLoading = false
 
   return (
     <div className="home">
