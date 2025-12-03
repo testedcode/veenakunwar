@@ -25,21 +25,29 @@ function Admin() {
     e.preventDefault()
     setLoading(true)
     setError('')
+    const trimmedEmail = email.trim()
+    const trimmedPassword = password.trim()
+    
     try {
-      console.log('Attempting login with:', email)
-      const result = await login(email.trim(), password)
+      console.log('Attempting login with:', trimmedEmail)
+      const result = await login(trimmedEmail, trimmedPassword)
       console.log('Login successful:', result.user)
+      // Login successful - component will re-render with currentUser
     } catch (err) {
       console.error('Login error details:', {
         code: err.code,
         message: err.message,
-        email: email
+        email: trimmedEmail,
+        fullError: err
       })
+      
       // Show more specific error messages
-      if (err.code === 'auth/user-not-found') {
-        setError('User not found. Please check your email address.')
+      if (err.code === 'auth/invalid-credential') {
+        setError('Invalid email or password. Please check your credentials. Make sure Email/Password auth is enabled in Firebase.')
+      } else if (err.code === 'auth/user-not-found') {
+        setError('User not found. Please check your email address or create the user in Firebase Console.')
       } else if (err.code === 'auth/wrong-password') {
-        setError('Incorrect password. Please try again.')
+        setError('Incorrect password. Please try again or reset password in Firebase Console.')
       } else if (err.code === 'auth/invalid-email') {
         setError('Invalid email format. Please check your email.')
       } else if (err.code === 'auth/user-disabled') {
@@ -47,11 +55,11 @@ function Admin() {
       } else if (err.code === 'auth/too-many-requests') {
         setError('Too many failed attempts. Please try again later.')
       } else if (err.code === 'auth/operation-not-allowed') {
-        setError('Email/Password authentication is not enabled. Please enable it in Firebase Console.')
+        setError('Email/Password authentication is not enabled. Please enable it in Firebase Console → Authentication → Sign-in method.')
       } else if (err.code === 'auth/network-request-failed') {
         setError('Network error. Please check your internet connection.')
       } else {
-        setError(`Login failed: ${err.message || err.code || 'Unknown error'}. Check console for details.`)
+        setError(`Login failed: ${err.message || err.code || 'Unknown error'}. Check browser console (F12) for details.`)
       }
     } finally {
       setLoading(false)
