@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useCollection, useStorage } from '../hooks/useFirebase'
 import { storage } from '../firebase'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import Card from '../components/Card'
 import Loader from '../components/Loader'
 import Button from '../components/Button'
@@ -19,7 +19,7 @@ function Admin() {
   const { data: sessions, add: addSession, update: updateSession, remove: removeSession } = useCollection('sessions')
   const { data: products, add: addProduct, update: updateProduct, remove: removeProduct } = useCollection('products')
   const { data: testimonials, add: addTestimonial, update: updateTestimonial, remove: removeTestimonial } = useCollection('testimonials')
-  const { urls: galleryUrls, uploadFile } = useStorage('gallery')
+  const { urls: galleryUrls, loading: galleryLoading, uploadFile } = useStorage('gallery')
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -28,7 +28,21 @@ function Admin() {
     try {
       await login(email, password)
     } catch (err) {
-      setError('Invalid email or password')
+      console.error('Login error:', err)
+      // Show more specific error messages
+      if (err.code === 'auth/user-not-found') {
+        setError('User not found. Please check your email.')
+      } else if (err.code === 'auth/wrong-password') {
+        setError('Incorrect password. Please try again.')
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email format.')
+      } else if (err.code === 'auth/user-disabled') {
+        setError('This account has been disabled.')
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Too many failed attempts. Please try again later.')
+      } else {
+        setError(err.message || 'Login failed. Please check your credentials.')
+      }
     } finally {
       setLoading(false)
     }
@@ -138,7 +152,7 @@ function Admin() {
               />
             )}
             {activeTab === 'gallery' && (
-              <GalleryPanel uploadFile={uploadFile} />
+              <GalleryPanel uploadFile={uploadFile} urls={galleryUrls} loading={galleryLoading} />
             )}
           </div>
         </div>
@@ -564,7 +578,7 @@ function TestimonialsPanel({ testimonials, onAdd, onUpdate, onDelete }) {
   )
 }
 
-function GalleryPanel({ uploadFile }) {
+function GalleryPanel({ uploadFile, urls: galleryUrls, loading: galleryLoading }) {
   const [uploading, setUploading] = useState(false)
 
   const handleUpload = async (e) => {
@@ -576,13 +590,29 @@ function GalleryPanel({ uploadFile }) {
         const fileName = `${Date.now()}_${file.name}`
         await uploadFile(file, fileName)
       }
-      alert('Images uploaded successfully!')
+      alert('Images uploaded successfully! Refresh the page to see them.')
       e.target.value = '' // Reset input
+      // Reload page after 1 second to show new images
+      setTimeout(() => window.location.reload(), 1000)
     } catch (err) {
       console.error('Upload error:', err)
-      alert('Upload failed. Please try again.')
+      alert(`Upload failed: ${err.message || 'Please try again.'}`)
     } finally {
       setUploading(false)
+    }
+  }
+
+  const handleDelete = async (imageName) => {
+    if (confirm('Are you sure you want to delete this image?')) {
+      try {
+        const imageRef = ref(storage, `gallery/${imageName}`)
+        await deleteObject(imageRef)
+        alert('Image deleted successfully!')
+        window.location.reload()
+      } catch (err) {
+        console.error('Delete error:', err)
+        alert('Failed to delete image. Please try again.')
+      }
     }
   }
 
@@ -592,7 +622,7 @@ function GalleryPanel({ uploadFile }) {
       <Card className="admin-form-card">
         <h3>Upload Gallery Images</h3>
         <div className="form-group">
-          <label>Select Images</label>
+          <label>Select Images (You can select multiple)</label>
           <input
             type="file"
             accept="image/*"
@@ -600,12 +630,38 @@ function GalleryPanel({ uploadFile }) {
             onChange={handleUpload}
             disabled={uploading}
           />
-          {uploading && <p>Uploading images...</p>}
+          {uploading && <p style={{ color: 'var(--primary-blue)', fontWeight: 'bold' }}>Uploading images... Please wait.</p>}
         </div>
         <p className="upload-note">
-          You can select multiple images at once. Images will be uploaded to Firebase Storage.
+          You can select multiple images at once. Images will be uploaded to Firebase Storage in the <code>gallery/</code> folder.
         </p>
       </Card>
+
+      <div className="admin-list" style={{ marginTop: '2rem' }}>
+        <h3>Gallery Images ({galleryUrls.length})</h3>
+        {galleryLoading ? (
+          <p>Loading gallery...</p>
+        ) : galleryUrls.length > 0 ? (
+          <div className="gallery-grid-admin">
+            {galleryUrls.map((item, index) => (
+              <Card key={index} className="gallery-item-admin">
+                <img src={item.url} alt={`Gallery ${index + 1}`} />
+                <div className="gallery-item-actions">
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleDelete(item.name)}
+                    style={{ fontSize: '0.9rem', padding: '8px 16px' }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p>No images in gallery yet. Upload images above.</p>
+        )}
+      </div>
     </div>
   )
 }
