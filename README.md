@@ -1,4 +1,4 @@
-# Hasya Yoga Website
+# Veena Hasya Yoga Website
 
 A modern, senior-friendly website for Hasya Yoga sessions, wellness products, and community connection.
 
@@ -48,4 +48,3 @@ Deploy to Vercel:
 ## Admin Access
 
 Navigate to `/admin` and login with Firebase Auth credentials.
-
