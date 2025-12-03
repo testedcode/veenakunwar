@@ -1,0 +1,135 @@
+.sessions {
+  min-height: 100vh;
+}
+
+.sessions-hero {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+  padding: 80px 0;
+  text-align: center;
+  color: var(--white);
+}
+
+.sessions-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.sessions-calendar {
+  margin-top: 2rem;
+}
+
+.day-section {
+  margin-bottom: 3rem;
+}
+
+.day-title {
+  font-size: 2rem;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--primary-yellow);
+}
+
+.sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.session-card {
+  padding: 2rem;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.session-header h4 {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  flex: 1;
+}
+
+.session-time {
+  background: linear-gradient(135deg, var(--primary-yellow) 0%, #FFA500 100%);
+  color: var(--text-dark);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.session-description {
+  color: var(--text-light);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.session-actions {
+  margin-top: 1rem;
+}
+
+.no-sessions {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-light);
+}
+
+.no-sessions p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.contact-note {
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.info-section {
+  background: var(--bg-light);
+}
+
+.info-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2.5rem;
+}
+
+.info-card h3 {
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.info-card ol {
+  padding-left: 2rem;
+}
+
+.info-card ol li {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .sessions-hero h1 {
+    font-size: 2rem;
+  }
+
+  .sessions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .session-header {
+    flex-direction: column;
+  }
+}
+

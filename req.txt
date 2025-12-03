@@ -1,0 +1,353 @@
+
+# ✅ **FULL REQUIREMENT DOCUMENT FOR CURSOR**
+
+**Project Name:**
+*Hasya Yoga Website – React + Firebase + Vercel*
+
+---
+
+github:
+Email : abhi86813@gmail.com
+password : Proj@2005
+
+Firebase:
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA1Qr10jYG2yS9b_R3AQvfKvc8c1R-Ep6Y",
+  authDomain: "veenakunwar-50d5d.firebaseapp.com",
+  projectId: "veenakunwar-50d5d",
+  storageBucket: "veenakunwar-50d5d.firebasestorage.app",
+  messagingSenderId: "336417751752",
+  appId: "1:336417751752:web:2332f70b7db9926d769bfd",
+  measurementId: "G-CFBMY6MPCH"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+## **1. Goal**
+
+Build a modern, simple, senior-friendly website for a 60-year-old Hasya Yoga teacher to:
+
+* Showcase Hasya Yoga sessions
+* Display Zoom schedules
+* Showcase photo & video gallery
+* Sell wellness products using QR payments + WhatsApp orders
+* Connect to Instagram/Facebook content
+* Allow easy admin updates (products, schedules, gallery images)
+* Host completely on Vercel
+* Use Firebase Firestore + Storage as backend (free tier)
+
+---
+
+## **2. Tech Stack**
+
+* **React** (Vite or CRA)
+
+* **React Router**
+
+* **CSS** (or Tailwind if needed)
+
+* **Firebase**
+
+  * Firestore (sessions, products, galleries, testimonials)
+  * Storage (images, QR codes)
+  * Optional: Auth (admin only)
+
+* **Deployment:**
+
+  * Vercel
+
+---
+
+## **3. Pages to Build**
+
+### **1. Home Page**
+
+* Hero banner with image & tagline
+* Short introduction
+* Buttons:
+
+  * Join Zoom Session
+  * View Gallery
+  * Shop Products
+* Testimonials section
+* Small gallery preview
+* Social media icons (FB, Instagram)
+
+---
+
+### **2. About Page**
+
+* Her story
+* Experience
+* Mission
+* Images
+* Why Hasya Yoga
+* Story behind wellness products
+
+---
+
+### **3. Sessions & Zoom Schedule Page**
+
+Dynamic content loaded from Firestore collection `/sessions`.
+
+Each session record contains:
+
+```
+{
+  title,
+  day,
+  time,
+  zoomLink,
+  description
+}
+```
+
+UI features:
+
+* Weekly schedule
+* Zoom buttons
+* Optional calendar view
+
+---
+
+### **4. Shop / Products Page**
+
+Dynamic listing from Firestore collection `/products`.
+
+Each product has:
+
+```
+{
+  name,
+  price,
+  description,
+  imageURL,
+  qrURL,
+  whatsappMessage
+}
+```
+
+UI features:
+
+* Product grid
+* Product image
+* Price
+* WhatsApp order button
+* QR code for payment
+
+---
+
+### **5. Gallery Page**
+
+Fetch all gallery images from Firebase Storage folder `/gallery`.
+
+UI:
+
+* Masonry or grid layout
+* Lightbox preview
+* Video links (optional)
+
+---
+
+### **6. Social Media Hub Page**
+
+Sections:
+
+* Instagram embed feed
+* Facebook page posts
+* YouTube videos (if present)
+* Buttons to follow
+
+---
+
+### **7. Contact Page**
+
+* WhatsApp floating button
+* Phone number
+* Email
+* Contact form (EmailJS or just mailto:)
+* Optional Google Map
+
+---
+
+### **8. Admin Panel (Optional but Recommended)**
+
+Secured by Firebase Auth.
+Admin features:
+
+* Add/edit/delete sessions
+* Add/edit/delete products
+* Upload gallery images to Storage
+* Upload QR codes
+* Update homepage text
+* Manage testimonials
+
+Admin UI:
+
+* Simple dashboard
+* Separate route: `/admin`
+
+---
+
+## **4. Firestore Structure**
+
+```
+/sessions
+/products
+/gallery
+/testimonials
+/settings
+```
+
+---
+
+## **5. Firebase Storage Structure**
+
+```
+/gallery
+/product-images
+/qr
+/profile
+```
+
+---
+
+## **6. Required Components**
+
+### Global
+
+* Navbar
+* Footer
+* Layout wrapper
+* Button
+* Card
+* Loader
+* WhatsApp floating button
+
+### Pages
+
+* HomeHero
+* SessionCard
+* ProductCard
+* GalleryGrid
+* SocialEmbed
+* ContactForm
+* Admin dashboards
+
+---
+
+## **7. Required Hooks & Context**
+
+* `useFirebase` → Firestore + Storage helpers
+* `useAuth` (optional) → Admin login
+* `useCollection(collectionName)` → fetch list
+
+---
+
+## **8. Routing Structure**
+
+```
+/
+ /about
+ /sessions
+ /shop
+ /gallery
+ /social
+ /contact
+ /admin  (protected)
+```
+
+---
+
+## **9. Styles**
+
+* Clean + large fonts
+* Light colors (yellow, sky blue, green)
+* Card-based design
+* Mobile responsive
+* Senior-friendly: bigger buttons, clear spacing
+
+---
+
+## **10. Deployment**
+
+* Build optimized React app
+* Deploy to Vercel
+* Include `firebase.config.js`
+* Use environment variables:
+
+```
+VITE_FIREBASE_API_KEY=...
+```
+
+---
+
+## **11. Deliverables Cursor Should Generate**
+
+Cursor must output:
+
+### **1. Full React project folder**
+
+* Components
+* Pages
+* Firebase setup
+* Routing
+* CSS
+* Context hooks
+
+### **2. Firebase integration files**
+
+* Firestore read/write
+* Storage upload
+* Admin authentication
+
+### **3. All pages fully created**
+
+* Home
+* About
+* Sessions
+* Shop
+* Gallery
+* Social
+* Contact
+* Admin Panel
+
+### **4. Helper utilities**
+
+* `uploadImage.js`
+* `fetchCollection.js`
+* WhatsApp ordering utility
+
+### **5. Clean UI layout**
+
+* Fully responsive
+* Accessible
+* Easy for a 60-year-old teacher to use
+
+### **6. Deployment instructions**
+
+---
+
+# 📌 **Copy and paste this entire requirement document into Cursor.**
+
+Cursor will generate:
+
+* Full project folder
+* All pages
+* Components
+* Firebase logic
+* Admin panel
+* Styling
+* Routing
+* Deployment scripts
+
