@@ -3,7 +3,7 @@ import './SocialFeed.css'
 
 function FacebookFeed({ 
   title = "Connect With Us on Facebook",
-  pageUrl = FACEBOOK_URL,
+  pageUrl = "https://www.facebook.com/share/19qmoSddwT/",
   width = "100%",
   height = "600"
 }) {
