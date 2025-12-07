@@ -1,41 +1,59 @@
-import { Link, useLocation } from 'react-router-dom'
-import './Navbar.css'
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import "../styles/Navbar.css";
 
-function Navbar() {
-  const location = useLocation()
-
-  const isActive = (path) => location.pathname === path
+const Navbar = () => {
+  const location = useLocation();
 
   return (
     <nav className="navbar">
-      <div className="container">
-        <div className="navbar-content">
+      <div className="container navbar-content">
 
-          {/* Logo Wrapper */}
-          <Link to="/" className="navbar-brand">
-            <div className="logo-wrapper">
-              <img 
-                src="/assets/placeholders/logo2.png"
-                alt="Hasya Yoga by Veena Logo"
-                className="brand-logo"
-              />
-            </div>
-          </Link>
-
-          <ul className="navbar-menu">
-            <li><Link to="/" className={isActive('/') ? 'active' : ''}>Home</Link></li>
-            <li><Link to="/about" className={isActive('/about') ? 'active' : ''}>About</Link></li>
-            <li><Link to="/sessions" className={isActive('/sessions') ? 'active' : ''}>Sessions</Link></li>
-            <li><Link to="/shop" className={isActive('/shop') ? 'active' : ''}>Shop</Link></li>
-            <li><Link to="/gallery" className={isActive('/gallery') ? 'active' : ''}>Gallery</Link></li>
-            <li><Link to="/social" className={isActive('/social') ? 'active' : ''}>Social</Link></li>
-            <li><Link to="/contact" className={isActive('/contact') ? 'active' : ''}>Contact</Link></li>
-          </ul>
-
+        {/* LOGO + TEXT */}
+        <div className="navbar-brand">
+          <img
+            src="/assets/logo-hasya-yoga.png"
+            alt="Hasya Yoga by Veena"
+            className="brand-logo"
+          />
+          <span className="brand-text">Hasya Yoga by Veena</span>
         </div>
+
+        {/* NAVIGATION MENU */}
+        <ul className="navbar-menu">
+          <li>
+            <Link className={location.pathname === "/" ? "active" : ""} to="/">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={location.pathname === "/about" ? "active" : ""}
+              to="/about"
+            >
+              About
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={location.pathname === "/gallery" ? "active" : ""}
+              to="/gallery"
+            >
+              Gallery
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={location.pathname === "/contact" ? "active" : ""}
+              to="/contact"
+            >
+              Contact
+            </Link>
+          </li>
+        </ul>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
