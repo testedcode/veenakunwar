@@ -58,6 +58,40 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.powered-by {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.powered-by p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.powered-by-link {
+  color: var(--primary-yellow);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.powered-by-link:hover {
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.powered-by-text {
+  font-size: 1rem;
+}
+
 @media (max-width: 768px) {
   .footer-content {
     grid-template-columns: 1fr;

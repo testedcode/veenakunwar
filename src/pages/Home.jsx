@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom'
 import { useCollection } from '../hooks/useFirebase'
 import { getGalleryImages } from '../utils/images'
 import { FACEBOOK_URL, INSTAGRAM_URL } from '../utils/constants'
+import HeroSlider from '../components/Slider/HeroSlider'
+import ImageGrid from '../components/Gallery/ImageGrid'
+import InstagramFeed from '../components/Social/InstagramFeed'
+import FacebookFeed from '../components/Social/FacebookFeed'
 import Button from '../components/Button'
 import Card from '../components/Card'
 import Loader from '../components/Loader'
@@ -13,31 +17,23 @@ function Home() {
   const galleryUrls = getGalleryImages()
   const galleryLoading = false
 
+  // Sample gallery images for different sections
+  const journeyImages = [
+    { url: '/assets/placeholders/profile1.jpg' },
+    { url: '/assets/placeholders/profile2.jpg' },
+    { url: '/profile.jpg' }
+  ]
+
+  const momentsImages = [
+    { url: '/assets/placeholders/gallery1.jpg' },
+    { url: '/assets/placeholders/gallery2.jpg' },
+    { url: '/profile.jpg' }
+  ]
+
   return (
     <div className="home">
-      {/* Hero Section */}
-      <section className="hero">
-        <div className="container">
-          <div className="hero-content">
-            <h1 className="hero-title">Welcome to Hasya Yoga</h1>
-            <p className="hero-subtitle">Experience the Joy of Laughter and Wellness</p>
-            <p className="hero-description">
-              Join us for transformative yoga sessions that combine traditional practices with the healing power of laughter.
-            </p>
-            <div className="hero-buttons">
-              <Link to="/sessions">
-                <Button variant="primary">Join Zoom Session</Button>
-              </Link>
-              <Link to="/gallery">
-                <Button variant="secondary">View Gallery</Button>
-              </Link>
-              <Link to="/shop">
-                <Button variant="success">Shop Products</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Slider Banner */}
+      <HeroSlider />
 
       {/* Introduction Section */}
       <section className="section intro-section">
@@ -56,6 +52,18 @@ function Home() {
               <Button variant="primary">Learn More About Us</Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Our Journey Section */}
+      <section className="section journey-section">
+        <div className="container">
+          <h2 className="section-title">Our Journey</h2>
+          <ImageGrid 
+            images={journeyImages} 
+            title=""
+            columns={3}
+          />
         </div>
       </section>
 
@@ -82,25 +90,15 @@ function Home() {
         </div>
       </section>
 
-      {/* Gallery Preview */}
-      <section className="section gallery-preview-section">
+      {/* Moments Gallery Section */}
+      <section className="section moments-section">
         <div className="container">
-          <h2 className="section-title">Gallery Preview</h2>
-          {galleryLoading ? (
-            <Loader />
-          ) : galleryUrls.length > 0 ? (
-            <div className="gallery-preview">
-              {galleryUrls.slice(0, 6).map((item, index) => (
-                <div key={index} className="gallery-preview-item">
-                  <img src={item.url} alt={`Gallery ${index + 1}`} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-data">
-              <p>Gallery images coming soon!</p>
-            </div>
-          )}
+          <h2 className="section-title">Moments Gallery</h2>
+          <ImageGrid 
+            images={momentsImages.length > 0 ? momentsImages : galleryUrls} 
+            title=""
+            columns={4}
+          />
           <div className="text-center" style={{ marginTop: '2rem' }}>
             <Link to="/gallery">
               <Button variant="secondary">View Full Gallery</Button>
@@ -109,7 +107,16 @@ function Home() {
         </div>
       </section>
 
-      {/* Social Media Section */}
+      {/* Instagram Feed Section */}
+      <InstagramFeed title="Follow Us on Instagram" />
+
+      {/* Facebook Feed Section */}
+      <FacebookFeed 
+        title="Connect With Us on Facebook"
+        pageUrl={FACEBOOK_URL}
+      />
+
+      {/* Social Media CTA Section */}
       <section className="section social-section">
         <div className="container">
           <h2 className="section-title">Connect With Us</h2>
@@ -135,4 +142,3 @@ function Home() {
 }
 
 export default Home
-

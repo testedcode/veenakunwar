@@ -38,6 +38,17 @@ function Footer() {
         </div>
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} Hasya Yoga. All rights reserved.</p>
+          <div className="powered-by">
+            <p>Powered by</p>
+            <a 
+              href="https://futurewebguru.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="powered-by-link"
+            >
+              <span className="powered-by-text">FutureWebGuru.com</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
