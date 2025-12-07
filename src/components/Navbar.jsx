@@ -12,7 +12,7 @@ function Navbar() {
         <div className="navbar-content">
           <Link to="/" className="navbar-brand">
             <span className="brand-icon">🧘</span>
-            <span className="brand-text">Hasya Yoga</span>
+            <span className="brand-text">Hasya Yoga By Veena</span>
           </Link>
           <ul className="navbar-menu">
             <li>
