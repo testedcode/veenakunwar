@@ -108,13 +108,10 @@ function Home() {
       </section>
 
       {/* Instagram Feed Section */}
-      <InstagramFeed title="Follow Us on Instagram" username="veena_kunwar" />
+      <InstagramFeed title="Instagram Highlights" />
 
       {/* Facebook Feed Section */}
-      <FacebookFeed 
-        title="Connect With Us on Facebook"
-        pageUrl={FACEBOOK_URL}
-      />
+      <FacebookFeed title="Facebook Updates" />
 
       {/* Social Media CTA Section */}
       <section className="section social-section">
