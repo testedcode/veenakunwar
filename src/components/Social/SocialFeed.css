@@ -3,25 +3,77 @@
   background: var(--bg-light);
 }
 
-.instagram-embed-wrapper,
-.facebook-embed-wrapper {
+/* Instagram Feed Styles */
+.instagram-section {
+  padding: 4rem 0;
+  background: var(--white);
+}
+
+.instagram-section .section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.insta-post-wrapper {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px var(--shadow);
+  transition: transform 0.3s ease;
+  background: var(--white);
+}
+
+.insta-post-wrapper:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px var(--shadow-hover);
+}
+
+.insta-post-wrapper iframe {
+  width: 100%;
+  height: 420px;
+  border: none;
+  background: var(--white);
+  border-radius: 12px;
+  display: block;
+}
+
+/* Facebook Feed Styles */
+.facebook-section {
+  padding: 4rem 0;
+  background: var(--bg-light);
+}
+
+.facebook-section .section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.fb-page-wrapper {
   width: 100%;
   margin: 2rem 0;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 8px 32px var(--shadow);
   background: var(--white);
-  min-height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 1rem;
+  min-height: 650px;
 }
 
-.instagram-embed-wrapper iframe,
-.facebook-embed-wrapper iframe {
+.fb-page {
   width: 100%;
-  border: none;
-  border-radius: 20px;
 }
 
 .social-link-fallback {
@@ -29,12 +81,37 @@
 }
 
 @media (max-width: 768px) {
-  .social-feed-section {
+  .instagram-section,
+  .facebook-section {
     padding: 2rem 0;
   }
 
-  .instagram-embed-wrapper,
-  .facebook-embed-wrapper {
+  .instagram-section .section-title,
+  .facebook-section .section-title {
+    font-size: 1.5rem;
+  }
+
+  .insta-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .insta-post-wrapper iframe {
+    height: 400px;
+  }
+
+  .fb-page-wrapper {
+    min-height: 500px;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .insta-post-wrapper iframe {
+    height: 350px;
+  }
+
+  .fb-page-wrapper {
     min-height: 400px;
   }
 }

@@ -1,38 +1,50 @@
+import { useEffect } from "react"
 import { FACEBOOK_URL } from '../../utils/constants'
-import './SocialFeed.css'
+import "./SocialFeed.css"
 
-function FacebookFeed({ 
-  title = "Connect With Us on Facebook",
-  pageUrl = FACEBOOK_URL,
-  width = "100%",
-  height = "600"
-}) {
-  // Facebook Page Plugin is FREE and works without API keys
-  // Just need your Facebook page URL
-  
+export default function FacebookFeed({ title = "Facebook Updates" }) {
+  useEffect(() => {
+    // Load Facebook SDK only once
+    if (!window.FB) {
+      const script = document.createElement("script")
+      script.async = true
+      script.defer = true
+      script.crossOrigin = "anonymous"
+      script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0"
+      document.body.appendChild(script)
+
+      // Initialize FB when script loads
+      script.onload = () => {
+        if (window.FB) {
+          window.FB.XFBML.parse()
+        }
+      }
+    } else {
+      // If FB SDK already loaded, just parse
+      window.FB.XFBML.parse()
+    }
+  }, [])
+
   return (
-    <section className="social-feed-section">
+    <section className="facebook-section">
       <div className="container">
         <h2 className="section-title">{title}</h2>
-        <div className="facebook-embed-wrapper">
-          {/* Facebook Page Plugin - FREE, no API key needed */}
-          <iframe
-            src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(pageUrl)}&tabs=timeline&width=${width}&height=${height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
-            width={width}
-            height={height}
-            style={{ border: 'none', overflow: 'hidden', borderRadius: '20px' }}
-            scrolling="no"
-            frameBorder="0"
-            allowFullScreen={true}
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            title="Facebook Feed"
-            loading="lazy"
-          ></iframe>
+        <div className="fb-page-wrapper">
+          <div
+            className="fb-page"
+            data-href={FACEBOOK_URL}
+            data-tabs="timeline"
+            data-width="100%"
+            data-height="650"
+            data-small-header="true"
+            data-hide-cover="false"
+            data-adapt-container-width="true"
+            data-show-facepile="true"
+          ></div>
         </div>
-        
         <div className="social-link-fallback" style={{ textAlign: 'center', marginTop: '2rem' }}>
           <a
-            href={pageUrl}
+            href={FACEBOOK_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
@@ -44,5 +56,3 @@ function FacebookFeed({
     </section>
   )
 }
-
-export default FacebookFeed
