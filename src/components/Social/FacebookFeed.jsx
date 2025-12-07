@@ -3,7 +3,7 @@ import './SocialFeed.css'
 
 function FacebookFeed({ 
   title = "Connect With Us on Facebook",
-  pageUrl = "https://www.facebook.com/share/19qmoSddwT/",
+  pageUrl = FACEBOOK_URL,
   width = "100%",
   height = "600"
 }) {
@@ -17,7 +17,7 @@ function FacebookFeed({
         <div className="facebook-embed-wrapper">
           {/* Facebook Page Plugin - FREE, no API key needed */}
           <iframe
-            src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(pageUrl)}&tabs=timeline&width=${width}&height=${height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`}
+            src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(pageUrl)}&tabs=timeline&width=${width}&height=${height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
             width={width}
             height={height}
             style={{ border: 'none', overflow: 'hidden', borderRadius: '20px' }}
