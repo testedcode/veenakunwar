@@ -5,7 +5,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 1rem 0;
+  padding: 0.6rem 0;
 }
 
 .navbar-content {
@@ -17,10 +17,7 @@
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-dark);
+  gap: 12px;
   transition: transform 0.3s ease;
 }
 
@@ -28,10 +25,18 @@
   transform: scale(1.05);
 }
 
-.brand-icon {
-  font-size: 2rem;
+/* ⭐ LOGO STYLING */
+.brand-logo {
+  height: 55px;               /* adjust as needed */
+  width: auto;
+  object-fit: contain;
+  border-radius: 50%;         /* gives soft circle (looks professional) */
+  background: white;          /* clean boundary on colored images */
+  padding: 4px;               /* inner spacing for crisp look */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+/* Navigation Menu */
 .navbar-menu {
   display: flex;
   list-style: none;
@@ -59,6 +64,7 @@
   color: var(--white);
 }
 
+/* Mobile View */
 @media (max-width: 768px) {
   .navbar-content {
     flex-direction: column;
@@ -75,5 +81,8 @@
     font-size: 16px;
     padding: 6px 12px;
   }
-}
 
+  .brand-logo {
+    height: 48px; /* smaller logo on mobile */
+  }
+}
