@@ -108,7 +108,7 @@ function Home() {
       </section>
 
       {/* Instagram Feed Section */}
-      <InstagramFeed title="Follow Us on Instagram" />
+      <InstagramFeed title="Follow Us on Instagram" username="veena_kunwar" />
 
       {/* Facebook Feed Section */}
       <FacebookFeed 
