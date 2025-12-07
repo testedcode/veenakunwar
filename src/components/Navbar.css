@@ -14,26 +14,25 @@
   align-items: center;
 }
 
-.navbar-brand {
+/* Logo Container - prevents breaking */
+.logo-wrapper {
+  height: 60px;
+  width: 60px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  transition: transform 0.3s ease;
+  overflow: hidden; /* Prevent large image from causing layout shift */
 }
 
-.navbar-brand:hover {
-  transform: scale(1.05);
-}
-
-/* ⭐ LOGO STYLING */
+/* Responsive, safe logo */
 .brand-logo {
-  height: 55px;               /* adjust as needed */
-  width: auto;
+  height: 100%;
+  width: 100%;
   object-fit: contain;
-  border-radius: 50%;         /* gives soft circle (looks professional) */
-  background: white;          /* clean boundary on colored images */
-  padding: 4px;               /* inner spacing for crisp look */
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 50%;
+  background: white;
+  padding: 3px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.15);
 }
 
 /* Navigation Menu */
@@ -50,7 +49,6 @@
   padding: 8px 16px;
   border-radius: 25px;
   transition: all 0.3s ease;
-  position: relative;
 }
 
 .navbar-menu li a:hover {
@@ -82,7 +80,8 @@
     padding: 6px 12px;
   }
 
-  .brand-logo {
-    height: 48px; /* smaller logo on mobile */
+  .logo-wrapper {
+    height: 50px;
+    width: 50px;
   }
 }
