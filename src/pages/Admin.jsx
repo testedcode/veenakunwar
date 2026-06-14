@@ -329,7 +329,9 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
     description: '',
     imageURL: '',
     qrURL: '',
-    whatsappMessage: ''
+    whatsappMessage: '',
+    ingredients: '',
+    isAvailable: true
   })
   const [uploading, setUploading] = useState(false)
 
@@ -387,7 +389,8 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
     e.preventDefault()
     const productData = {
       ...formData,
-      price: parseFloat(formData.price)
+      price: parseFloat(formData.price),
+      ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()) : []
     }
     if (editing) {
       await onUpdate(editing.id, productData)
@@ -395,7 +398,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
     } else {
       await onAdd(productData)
     }
-    setFormData({ name: '', price: '', description: '', imageURL: '', qrURL: '', whatsappMessage: '' })
+    setFormData({ name: '', price: '', description: '', imageURL: '', qrURL: '', whatsappMessage: '', ingredients: '', isAvailable: true })
   }
 
   const handleEdit = (product) => {
@@ -406,7 +409,9 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
       description: product.description || '',
       imageURL: product.imageURL || '',
       qrURL: product.qrURL || '',
-      whatsappMessage: product.whatsappMessage || ''
+      whatsappMessage: product.whatsappMessage || '',
+      ingredients: product.ingredients ? product.ingredients.join(', ') : '',
+      isAvailable: product.isAvailable !== false
     })
   }
 
@@ -444,6 +449,24 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows="3"
             ></textarea>
+          </div>
+          <div className="form-group">
+            <label>Ingredients (comma separated)</label>
+            <textarea
+              value={formData.ingredients}
+              onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
+              rows="2"
+              placeholder="e.g., Sudh Desi Ghee, Whole Wheat, Jaggery"
+            ></textarea>
+          </div>
+          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <input
+              type="checkbox"
+              checked={formData.isAvailable}
+              onChange={(e) => setFormData({ ...formData, isAvailable: e.target.checked })}
+              id="isAvailable"
+            />
+            <label htmlFor="isAvailable" style={{ margin: 0 }}>Product is Available in Stock</label>
           </div>
           <div className="form-row">
             <div className="form-group">

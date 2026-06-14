@@ -1,204 +1,337 @@
 .home {
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.hero {
-  background: linear-gradient(135deg, var(--primary-yellow) 0%, var(--primary-blue) 100%);
-  padding: 100px 0;
+/* 1. Immersive Hero */
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: 90vh; /* Takes most of the viewport */
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--text-dark); /* Fallback */
+}
+
+/* Assuming HeroSlider handles the background images, 
+we layer the overlay content on top of it */
+.hero-overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
   text-align: center;
-  color: var(--text-dark);
+  width: 90%;
+  max-width: 900px;
+  background: rgba(43, 45, 66, 0.6); /* Dark glassy overlay */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
 }
 
-.hero-content {
-  max-width: 800px;
-  margin: 0 auto;
+.hero-title-blast {
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
-.hero-title {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  animation: fadeInUp 0.8s ease;
+.hero-subtitle-blast {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  opacity: 0.95;
 }
 
-.hero-subtitle {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  font-weight: 500;
-  animation: fadeInUp 1s ease;
-}
-
-.hero-description {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  line-height: 1.8;
-  animation: fadeInUp 1.2s ease;
-}
-
-.hero-buttons {
+.hero-actions {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
-  animation: fadeInUp 1.4s ease;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* 2. Dual Showcase */
+.dual-showcase {
+  background: var(--white);
+  position: relative;
+  z-index: 2;
+  margin-top: -50px; /* Slight overlap for depth */
 }
 
-.intro-section {
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+.showcase-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  border-top: 5px solid transparent;
+}
+
+.showcase-card.yoga-side {
+  border-top-color: var(--primary-accent);
+}
+
+.showcase-card.food-side {
+  border-top-color: var(--primary-brand);
+}
+
+.showcase-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.showcase-benefits {
+  list-style: none;
+  text-align: left;
+  margin: 2rem 0;
+  color: var(--text-muted);
+}
+
+.showcase-benefits li {
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+
+/* 3. Featured Products */
+.featured-products {
+  background: var(--bg-subtle);
+}
+
+.section-header-dynamic {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header-dynamic .section-title {
+  margin-bottom: 0.5rem;
+}
+
+.section-header-dynamic .section-subtitle {
+  color: var(--text-light);
+  font-size: 1.2rem;
+}
+
+.products-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+}
+
+.product-blast-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.product-blast-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+}
+
+.product-image-wrapper {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.product-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-blast-card:hover .product-image-wrapper img {
+  transform: scale(1.1);
+}
+
+.product-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-brand);
+  color: var(--white);
+  padding: 5px 15px;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: var(--shadow-sm);
+}
+
+.product-blast-info {
+  padding: 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-blast-info h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-blast-info .price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-brand);
+  margin-bottom: 1rem;
+}
+
+.product-blast-info .desc {
+  color: var(--text-light);
+  flex-grow: 1;
+}
+
+/* 4. Social Wall */
+.social-wall-section {
   background: var(--white);
 }
 
-.intro-content {
-  max-width: 800px;
-  margin: 0 auto;
+.social-wall-header {
   text-align: center;
+  margin-bottom: 3rem;
 }
 
-.intro-content h2 {
-  color: var(--text-dark);
+.social-wall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.social-wall-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 2rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-normal);
+}
+
+.social-wall-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.social-wall-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  z-index: 1;
+}
+
+.social-wall-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.insta-card {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.fb-card {
+  background: linear-gradient(135deg, #1877F2 0%, #0c5abb 100%);
+}
+
+.social-wall-icon {
+  font-size: 3.5rem;
   margin-bottom: 1.5rem;
 }
 
-.intro-content p {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 1rem;
-  color: var(--text-light);
+.social-wall-cta {
+  margin-top: 2rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.testimonials-section {
-  background: linear-gradient(135deg, var(--bg-light) 0%, var(--white) 100%);
+/* 5. Testimonials Blast */
+.testimonials-blast {
+  background: var(--primary-accent);
+  color: var(--white);
 }
 
-.testimonials-grid {
+.testimonials-masonry {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 }
 
-.testimonial-card {
-  text-align: center;
+.testimonial-blast-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  position: relative;
+  transition: var(--transition-normal);
+}
+
+.testimonial-blast-card:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-5px);
+}
+
+.quote-icon {
+  font-size: 4rem;
+  font-family: serif;
+  color: var(--primary-brand);
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  opacity: 0.5;
+  line-height: 1;
 }
 
 .testimonial-text {
   font-size: 1.1rem;
   font-style: italic;
-  margin-bottom: 1rem;
-  color: var(--text-light);
   line-height: 1.8;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .testimonial-author {
-  font-weight: 600;
-  color: var(--text-dark);
-}
-
-.gallery-preview-section {
-  background: var(--white);
-}
-
-.gallery-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.gallery-preview-item {
-  position: relative;
-  overflow: hidden;
-  border-radius: 15px;
-  aspect-ratio: 1;
-  box-shadow: 0 4px 15px var(--shadow);
-  transition: transform 0.3s ease;
-}
-
-.gallery-preview-item:hover {
-  transform: scale(1.05);
-}
-
-.gallery-preview-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.social-section {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
-  text-align: center;
-}
-
-.social-buttons {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.social-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px var(--shadow);
-}
-
-.social-link:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px var(--shadow-hover);
-}
-
-.social-icon {
-  font-size: 3rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.no-data {
-  text-align: center;
-  padding: 3rem;
-  color: var(--text-light);
-  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  color: var(--secondary-brand);
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
+  .hero-overlay-content {
+    width: 95%;
+    padding: 2rem 1.5rem;
   }
-
-  .hero-subtitle {
-    font-size: 1.2rem;
-  }
-
-  .hero-description {
-    font-size: 1rem;
-  }
-
-  .hero-buttons {
+  
+  .hero-actions {
     flex-direction: column;
-    align-items: center;
   }
-
-  .gallery-preview {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  
+  .dual-showcase {
+    margin-top: 0;
   }
 }
-
