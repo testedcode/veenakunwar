@@ -1,21 +1,14 @@
 import { useState } from 'react'
-import { getGalleryImages } from '../utils/images'
+import { useStorage } from '../hooks/useFirebase'
 import Loader from '../components/Loader'
 import './Gallery.css'
 
 function Gallery() {
-  // Use local images instead of Firebase Storage
-  const urls = getGalleryImages()
-  const loading = false
+  const { urls, loading } = useStorage('gallery')
   const [selectedImage, setSelectedImage] = useState(null)
 
-  const openLightbox = (image) => {
-    setSelectedImage(image)
-  }
-
-  const closeLightbox = () => {
-    setSelectedImage(null)
-  }
+  const openLightbox = (image) => setSelectedImage(image)
+  const closeLightbox = () => setSelectedImage(null)
 
   const navigateImage = (direction) => {
     if (!selectedImage) return
@@ -30,62 +23,63 @@ function Gallery() {
   }
 
   return (
-    <div className="gallery">
-      <section className="gallery-hero">
-        <div className="container">
-          <h1>Photo Gallery</h1>
-          <p className="hero-subtitle">Moments of joy and wellness from our sessions</p>
+    <div className="gallery-radical">
+      <section className="gallery-organic-hero organic-section">
+        <div className="fluid-container text-center">
+          <h1 className="hero-title">Visual Symphony</h1>
+          <p className="hero-subtitle" style={{color: 'var(--text-light)', margin: '0 auto'}}>
+            Moments of joy, deep breathing, and heritage celebrations captured in time.
+          </p>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
+      <section className="gallery-masonry-section organic-section">
+        <div className="fluid-container">
           {loading ? (
-            <Loader />
+            <div className="loader-organic"></div>
           ) : urls.length > 0 ? (
-            <div className="gallery-grid">
+            <div className="masonry-grid">
               {urls.map((item, index) => (
-                <div
-                  key={index}
-                  className="gallery-item"
+                <div 
+                  key={index} 
+                  className={`masonry-item ${index % 3 === 0 ? 'large' : 'small'}`} 
                   onClick={() => openLightbox(item)}
                 >
-                  <img src={item.url} alt={`Gallery ${index + 1}`} />
-                  <div className="gallery-overlay">
-                    <span className="gallery-icon">🔍</span>
+                  <div className="masonry-img-wrap">
+                    <img src={item.url} alt={`Gallery ${index + 1}`} loading="lazy" />
+                    <div className="masonry-overlay">
+                      <span className="expand-icon">Expand</span>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="no-images">
-              <p>Gallery images coming soon! Check back later.</p>
+            <div className="no-images text-center">
+              <p>Visual moments are being collected. Check back later.</p>
             </div>
           )}
         </div>
       </section>
 
       {selectedImage && (
-        <div className="lightbox" onClick={closeLightbox}>
+        <div className="cinematic-lightbox" onClick={closeLightbox}>
           <button className="lightbox-close" onClick={closeLightbox}>×</button>
-          <button
-            className="lightbox-nav lightbox-prev"
-            onClick={(e) => {
-              e.stopPropagation()
-              navigateImage('prev')
-            }}
+          
+          <button 
+            className="lightbox-nav prev" 
+            onClick={(e) => { e.stopPropagation(); navigateImage('prev') }}
           >
             ‹
           </button>
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedImage.url} alt="Gallery" />
+          
+          <div className="lightbox-content-wrap" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage.url} alt="Gallery Expanded" />
           </div>
-          <button
-            className="lightbox-nav lightbox-next"
-            onClick={(e) => {
-              e.stopPropagation()
-              navigateImage('next')
-            }}
+          
+          <button 
+            className="lightbox-nav next" 
+            onClick={(e) => { e.stopPropagation(); navigateImage('next') }}
           >
             ›
           </button>
@@ -96,4 +90,3 @@ function Gallery() {
 }
 
 export default Gallery
-

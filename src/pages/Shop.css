@@ -1,163 +1,199 @@
-.shop-page {
-  min-height: 100vh;
-  background: var(--bg-main);
-}
-
-.shop-hero-blast {
-  background: linear-gradient(135deg, var(--primary-brand) 0%, var(--primary-accent) 100%);
-  padding: 120px 20px 80px;
-  text-align: center;
-  color: var(--white);
-  position: relative;
+.shop-radical {
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--food-warmth);
   overflow: hidden;
-}
-
-.shop-hero-blast::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
-  z-index: 1;
-}
-
-.shop-hero-blast .container {
   position: relative;
-  z-index: 2;
 }
 
-.shop-hero-blast h1 {
-  font-size: clamp(3rem, 5vw, 4.5rem);
-  margin-bottom: 1rem;
-}
-
-.shop-hero-blast .hero-subtitle {
-  font-size: 1.2rem;
-  max-width: 700px;
-  margin: 0 auto;
-  opacity: 0.9;
-}
-
-.shop-main-content {
-  padding: 80px 0;
-}
-
-.editorial-grid {
+.shop-loader-wrapper {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 6rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
 }
 
-.editorial-card {
+.shop-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  pointer-events: none;
+  animation: pulseOpacity 2s infinite;
+}
+
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Horizontal Track */
+.horizontal-track {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  background: var(--food-warmth);
+}
+
+.horizontal-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Intro & Outro Slides */
+.shop-intro-slide, .shop-outro-slide {
+  flex: 0 0 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start;
+  padding: var(--space-md);
+  text-align: center;
+  color: var(--bg-dark);
+}
+
+.shop-intro-slide h1 {
+  font-size: clamp(4rem, 10vw, 8rem);
+  margin-bottom: 2rem;
+  color: var(--bg-dark);
+}
+
+.shop-intro-slide p {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  max-width: 600px;
+  font-weight: 300;
+}
+
+.swipe-arrow {
+  margin-top: 4rem;
+  font-size: 3rem;
+  animation: bounceRight 2s infinite;
+}
+
+@keyframes bounceRight {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+}
+
+/* Product Slide */
+.product-fullscreen-slide {
+  flex: 0 0 100vw;
+  height: 100vh;
+  scroll-snap-align: start;
+  padding: var(--space-md);
   display: flex;
   align-items: center;
-  gap: 4rem;
-  background: var(--white);
-  border-radius: var(--radius-lg);
+  justify-content: center;
+}
+
+.product-split {
+  width: 100%;
+  max-width: 1400px;
+  height: 80vh;
+  display: flex;
+  background: var(--bg-light);
+  border-radius: 40px;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition-slow);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.1);
 }
 
-.editorial-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-5px);
-}
-
-.editorial-card.image-right {
-  flex-direction: row-reverse;
-}
-
-.editorial-image-wrapper {
+.product-image-side {
   flex: 1;
-  min-height: 400px;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
-.editorial-image-wrapper img {
+.product-image-side img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: transform 1s ease;
 }
 
-.editorial-card:hover .editorial-image-wrapper img {
-  transform: scale(1.05);
-}
-
-.editorial-info-wrapper {
+.product-info-side {
   flex: 1;
-  padding: 4rem;
+  padding: var(--space-lg);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.product-title {
-  font-size: 2.5rem;
-  color: var(--primary-accent);
-  margin-bottom: 1rem;
+.product-info-side .product-title {
+  font-size: clamp(3rem, 6vw, 5rem);
+  margin-bottom: 1.5rem;
+  color: var(--food-spice);
 }
 
-.product-desc {
-  color: var(--text-light);
-  font-size: 1.1rem;
+.product-info-side .product-desc {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
   line-height: 1.8;
+  color: var(--text-light);
   margin-bottom: 2rem;
 }
 
-.ingredient-highlights {
+.product-ingredients-minimal {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 2.5rem;
+  gap: 10px;
+  margin-bottom: 3rem;
 }
 
-.ing-chip {
-  background: var(--bg-subtle);
-  color: var(--text-dark);
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
+.ing-tag {
+  padding: 8px 16px;
+  border: 1px solid var(--food-spice);
+  color: var(--food-spice);
+  border-radius: 50px;
   font-size: 0.9rem;
   font-weight: 500;
-  border: 1px solid rgba(0,0,0,0.05);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.editorial-actions {
+.product-action-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 2rem;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
-.editorial-actions .price {
-  font-size: 1.5rem;
+.product-action-row .price {
+  font-size: 2rem;
+  font-family: 'Cormorant Garamond', serif;
   font-weight: 700;
-  color: var(--primary-brand);
+  color: var(--text-dark);
 }
 
 @media (max-width: 992px) {
-  .editorial-card, .editorial-card.image-right {
+  .product-split {
     flex-direction: column;
-    gap: 0;
-  }
-
-  .editorial-image-wrapper {
-    width: 100%;
-    min-height: 300px;
-  }
-
-  .editorial-info-wrapper {
-    padding: 2.5rem;
+    height: 90vh;
   }
   
-  .product-title {
-    font-size: 2rem;
+  .product-image-side {
+    height: 40vh;
+  }
+  
+  .product-info-side {
+    padding: var(--space-md);
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+  
+  .product-info-side .product-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
   }
 }

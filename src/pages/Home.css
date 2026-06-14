@@ -1,337 +1,235 @@
-.home {
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* 1. Immersive Hero */
-.hero-container {
-  position: relative;
-  width: 100%;
-  height: 90vh; /* Takes most of the viewport */
-  min-height: 600px;
+.home-radical {
+  background-color: var(--yoga-breath);
   overflow: hidden;
-  background: var(--text-dark); /* Fallback */
 }
 
-/* Assuming HeroSlider handles the background images, 
-we layer the overlay content on top of it */
-.hero-overlay-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  text-align: center;
-  width: 90%;
-  max-width: 900px;
-  background: rgba(43, 45, 66, 0.6); /* Dark glassy overlay */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 3rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: var(--white);
-}
-
-.hero-title-blast {
-  font-size: clamp(3rem, 6vw, 5rem);
-  color: var(--white);
-  margin-bottom: 1.5rem;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-
-.hero-subtitle-blast {
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
-  font-weight: 300;
-  line-height: 1.6;
-  margin-bottom: 2.5rem;
-  opacity: 0.95;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* 2. Dual Showcase */
-.dual-showcase {
-  background: var(--white);
+/* Hero Section */
+.hero-organic {
+  height: 100vh;
   position: relative;
-  z-index: 2;
-  margin-top: -50px; /* Slight overlap for depth */
+  display: flex;
+  align-items: center;
+  background: var(--yoga-breath);
 }
 
-.showcase-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 0 1rem;
+.hero-bg-blob {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 60vw;
+  height: 60vw;
+  background: var(--yoga-earth);
+  border-radius: 40% 60% 60% 40% / 50% 40% 60% 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  z-index: 1;
+  animation: spinOrganic 20s linear infinite;
 }
 
-.showcase-card {
-  text-align: center;
+.hero-content {
+  position: relative;
+  z-index: 10;
+}
+
+.hero-title {
+  font-size: clamp(4rem, 10vw, 9rem);
+  line-height: 0.85;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 300;
+  color: var(--text-light);
+  margin-bottom: 3rem;
+  max-width: 800px;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 2rem;
-  border-top: 5px solid transparent;
+  gap: 10px;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  opacity: 0.6;
 }
 
-.showcase-card.yoga-side {
-  border-top-color: var(--primary-accent);
-}
-
-.showcase-card.food-side {
-  border-top-color: var(--primary-brand);
-}
-
-.showcase-icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-  animation: float 4s ease-in-out infinite;
-}
-
-.showcase-benefits {
-  list-style: none;
-  text-align: left;
-  margin: 2rem 0;
-  color: var(--text-muted);
-}
-
-.showcase-benefits li {
-  margin-bottom: 0.8rem;
-  font-weight: 500;
-}
-
-/* 3. Featured Products */
-.featured-products {
-  background: var(--bg-subtle);
-}
-
-.section-header-dynamic {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.section-header-dynamic .section-title {
-  margin-bottom: 0.5rem;
-}
-
-.section-header-dynamic .section-subtitle {
-  color: var(--text-light);
-  font-size: 1.2rem;
-}
-
-.products-showcase-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem;
-}
-
-.product-blast-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-}
-
-.product-blast-card:hover {
-  transform: translateY(-10px);
-  box-shadow: var(--shadow-lg);
-}
-
-.product-image-wrapper {
+.scroll-line {
+  width: 1px;
+  height: 60px;
+  background: var(--text-dark);
   position: relative;
-  height: 250px;
   overflow: hidden;
 }
 
-.product-image-wrapper img {
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--food-warmth);
+  animation: scrollDown 2s ease-in-out infinite;
+}
+
+@keyframes scrollDown {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+
+/* Split Flows */
+.yoga-flow {
+  background: var(--bg-light);
+}
+
+.food-flow {
+  background: var(--bg-dark);
+  color: var(--yoga-breath);
+}
+
+.food-flow h2 {
+  color: var(--yoga-breath);
+}
+
+.food-flow p {
+  color: rgba(232, 241, 242, 0.7);
+}
+
+.food-flow .btn-solid {
+  background: var(--food-spice);
+  color: var(--white);
+}
+
+.split-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.split-flow.reverse {
+  grid-template-columns: 1fr 1fr;
+  direction: rtl;
+}
+
+.split-flow.reverse > * {
+  direction: ltr;
+}
+
+.flow-text {
+  max-width: 600px;
+}
+
+.flow-text h2 {
+  margin-bottom: 2rem;
+}
+
+.flow-text p {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+/* Organic Image Masks */
+.blob-mask {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mask-1 {
+  clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  transition: all 1s ease;
+}
+
+.mask-2 {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%;
+  transition: all 1s ease;
+}
+
+.blob-mask:hover {
+  border-radius: 50%;
+}
+
+.blob-mask img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 1s ease;
 }
 
-.product-blast-card:hover .product-image-wrapper img {
+.blob-mask:hover img {
   transform: scale(1.1);
 }
 
-.product-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: var(--primary-brand);
-  color: var(--white);
-  padding: 5px 15px;
-  border-radius: var(--radius-pill);
-  font-size: 0.85rem;
-  font-weight: 600;
-  z-index: 2;
-  box-shadow: var(--shadow-sm);
+/* Products Track */
+.products-flow {
+  background: var(--food-warmth);
 }
 
-.product-blast-info {
-  padding: 2rem;
-  flex-grow: 1;
+.organic-products-track {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding: 4rem 2rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.organic-products-track::-webkit-scrollbar {
+  display: none;
+}
+
+.organic-product-card {
+  min-width: 350px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.product-blast-info h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
+.product-img-wrap {
+  width: 300px;
+  height: 400px;
+  border-radius: 200px 200px 20px 20px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-.product-blast-info .price {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--primary-brand);
+.product-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.organic-product-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.product-blast-info .desc {
-  color: var(--text-light);
-  flex-grow: 1;
-}
-
-/* 4. Social Wall */
-.social-wall-section {
-  background: var(--white);
-}
-
-.social-wall-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.social-wall-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-}
-
-.social-wall-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 3rem 2rem;
-  border-radius: var(--radius-lg);
-  text-align: center;
-  color: var(--white);
-  position: relative;
-  overflow: hidden;
-  transition: var(--transition-normal);
-}
-
-.social-wall-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
-}
-
-.social-wall-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
-  z-index: 1;
-}
-
-.social-wall-card > * {
-  position: relative;
-  z-index: 2;
-}
-
-.insta-card {
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.fb-card {
-  background: linear-gradient(135deg, #1877F2 0%, #0c5abb 100%);
-}
-
-.social-wall-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.social-wall-cta {
-  margin-top: 2rem;
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* 5. Testimonials Blast */
-.testimonials-blast {
-  background: var(--primary-accent);
-  color: var(--white);
-}
-
-.testimonials-masonry {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-.testimonial-blast-card {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 2.5rem;
-  border-radius: var(--radius-lg);
-  position: relative;
-  transition: var(--transition-normal);
-}
-
-.testimonial-blast-card:hover {
-  background: rgba(255,255,255,0.1);
-  transform: translateY(-5px);
-}
-
-.quote-icon {
-  font-size: 4rem;
-  font-family: serif;
-  color: var(--primary-brand);
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  opacity: 0.5;
-  line-height: 1;
-}
-
-.testimonial-text {
-  font-size: 1.1rem;
-  font-style: italic;
-  line-height: 1.8;
-  margin-bottom: 1.5rem;
-  position: relative;
-  z-index: 2;
-}
-
-.testimonial-author {
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  color: var(--secondary-brand);
-}
-
-@media (max-width: 768px) {
-  .hero-overlay-content {
-    width: 95%;
-    padding: 2rem 1.5rem;
+@media (max-width: 992px) {
+  .split-flow, .split-flow.reverse {
+    grid-template-columns: 1fr;
+    gap: 4rem;
   }
   
-  .hero-actions {
-    flex-direction: column;
-  }
-  
-  .dual-showcase {
-    margin-top: 0;
+  .scroll-indicator {
+    display: none;
   }
 }

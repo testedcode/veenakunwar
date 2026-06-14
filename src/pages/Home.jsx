@@ -1,157 +1,106 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useCollection } from '../hooks/useFirebase'
-import { FACEBOOK_URL, INSTAGRAM_URL } from '../utils/constants'
 import { localImages } from '../utils/images'
-import HeroSlider from '../components/Slider/HeroSlider'
-import Button from '../components/Button'
-import Card from '../components/Card'
-import Loader from '../components/Loader'
 import './Home.css'
 
 function Home() {
-  const { data: testimonials, loading: testimonialsLoading } = useCollection('testimonials')
-  const { data: firebaseProducts, loading: productsLoading } = useCollection('products')
-
-  // Combine local products with any firebase products to show featured items
+  const { data: firebaseProducts } = useCollection('products')
   const featuredProducts = [...localImages.products, ...(firebaseProducts || [])].slice(0, 3)
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!scrollRef.current) return
+      const elements = scrollRef.current.querySelectorAll('[data-speed]')
+      elements.forEach(el => {
+        const speed = el.getAttribute('data-speed')
+        const yPos = -(window.scrollY * speed)
+        el.style.transform = `translateY(${yPos}px)`
+      })
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <div className="home">
-      {/* 1. Immersive Hero Slider (Hasya Yoga Focus) */}
-      <div className="hero-container">
-        <HeroSlider />
-        <div className="hero-overlay-content animate-fade-up">
-          <h1 className="hero-title-blast">Discover Joy & Wellness</h1>
-          <p className="hero-subtitle-blast">Experience the transformative power of Hasya Yoga and nourish your body with our premium heritage foods.</p>
+    <div className="home-radical" ref={scrollRef}>
+      
+      {/* Immersive Hero */}
+      <section className="hero-organic organic-section">
+        <div className="hero-bg-blob"></div>
+        <div className="fluid-container hero-content" data-speed="0.3">
+          <h1 className="hero-title">Breathe.<br/>Laugh.<br/>Nourish.</h1>
+          <p className="hero-subtitle">A journey of healing through Hasya Yoga, <br/> and nourishing the soul with Heritage Foods.</p>
           <div className="hero-actions">
-            <Link to="/about" className="btn btn-primary">Our Story</Link>
-            <a href="#featured-shop" className="btn btn-secondary">Explore Products</a>
+            <Link to="/about" className="btn-organic">Discover The Journey</Link>
           </div>
         </div>
-      </div>
+        <div className="scroll-indicator">
+          <span>Scroll</span>
+          <div className="scroll-line"></div>
+        </div>
+      </section>
 
-      {/* 2. Dual Showcase Section: Yoga + Food */}
-      <section className="section dual-showcase">
-        <div className="container">
-          <div className="showcase-grid">
-            
-            {/* Yoga Side */}
-            <div className="showcase-card glossy-card yoga-side">
-              <div className="showcase-icon">🧘‍♀️</div>
-              <h2>Hasya Yoga</h2>
-              <p>Laughter Yoga combines unconditional laughter with yogic breathing. It reduces stress, boosts immunity, and brings unparalleled joy to your daily life.</p>
-              <ul className="showcase-benefits">
-                <li>✨ Stress Relief & Mindfulness</li>
-                <li>✨ Enhanced Immune System</li>
-                <li>✨ Joyful Community Connections</li>
-              </ul>
-              <Link to="/sessions">
-                <Button variant="secondary">Join a Session</Button>
-              </Link>
+      {/* Seamless Transition to Yoga */}
+      <section className="yoga-flow organic-section">
+        <div className="fluid-container">
+          <div className="split-flow">
+            <div className="flow-text" data-speed="0.1">
+              <h2>The Healing Power of Laughter</h2>
+              <p>
+                Laughter Yoga isn't just an exercise; it's a medicine. By combining unconditional laughter with yogic breathing, 
+                we oxygenate the body and mind, reducing stress and boosting immunity. It's how Veena conquered asthma and arthritis.
+              </p>
+              <Link to="/sessions" className="btn-solid">Join a Session</Link>
             </div>
-
-            {/* Products Side */}
-            <div className="showcase-card glossy-card food-side">
-              <div className="showcase-icon">🍯</div>
-              <h2>Heritage Foods</h2>
-              <p>We craft authentic, traditional delicacies like Thekwa and Nimki using the finest ingredients like Sudh Desi Ghee. Pure, wholesome, and made with love.</p>
-              <ul className="showcase-benefits">
-                <li>✨ Authentic Traditional Recipes</li>
-                <li>✨ Premium Sudh Desi Ghee</li>
-                <li>✨ Zero Artificial Preservatives</li>
-              </ul>
-              <Link to="/shop">
-                <Button variant="primary">Visit Shop</Button>
-              </Link>
+            <div className="flow-image animate-float" data-speed="-0.1">
+              <div className="blob-mask mask-1">
+                <img src="/profile.jpg" alt="Yoga Session" />
+              </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* 3. Featured Products "Blast" Carousel / Grid */}
-      <section id="featured-shop" className="section featured-products">
-        <div className="container">
-          <div className="section-header-dynamic">
-            <h2 className="section-title">Trending Delicacies</h2>
-            <p className="section-subtitle">Handcrafted with heritage recipes to nourish your soul.</p>
+      {/* Seamless Transition to Food */}
+      <section className="food-flow organic-section">
+        <div className="fluid-container">
+          <div className="split-flow reverse">
+            <div className="flow-text" data-speed="0.1">
+              <h2>Nourishment from the Roots</h2>
+              <p>
+                True health extends beyond the mat. We rejected processed snacks and returned to our heritage. 
+                Our homemade Thekwa and Nimki are crafted with Sudh Desi Ghee and boundless love—just like a mother's prescription for a healthy life.
+              </p>
+              <Link to="/shop" className="btn-solid">Explore the Pantry</Link>
+            </div>
+            <div className="flow-image animate-float" data-speed="-0.05" style={{animationDelay: '1s'}}>
+              <div className="blob-mask mask-2">
+                <img src="/thekuwa.jpg" alt="Heritage Foods" />
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {productsLoading ? (
-            <Loader />
-          ) : (
-            <div className="products-showcase-grid">
-              {featuredProducts.map((product, index) => (
-                <div key={index} className="product-blast-card">
-                  <div className="product-image-wrapper">
-                    <img src={product.imageURL} alt={product.name} />
-                    <div className="product-badge">Top Rated</div>
-                  </div>
-                  <div className="product-blast-info">
-                    <h3>{product.name}</h3>
-                    <p className="price">₹{product.price}</p>
-                    <p className="desc">{product.description?.substring(0, 60)}...</p>
-                    <Link to="/shop" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                      View Details
-                    </Link>
-                  </div>
+      {/* Dynamic Products Showcase */}
+      <section className="products-flow organic-section">
+        <div className="fluid-container">
+          <h2 className="flow-title text-center" data-speed="0.2">Handcrafted with Love</h2>
+          
+          <div className="organic-products-track">
+            {featuredProducts.map((product, idx) => (
+              <div key={idx} className="organic-product-card" data-speed={idx % 2 === 0 ? "0.05" : "-0.05"}>
+                <div className="product-img-wrap">
+                  <img src={product.imageURL || '/thekuwa.jpg'} alt={product.name} />
                 </div>
-              ))}
-            </div>
-          )}
-          <div className="text-center" style={{ marginTop: '3rem' }}>
-            <Link to="/shop" className="btn btn-secondary btn-lg">Explore All Products ➔</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Social Wall (Replaces broken embeds) */}
-      <section className="section social-wall-section">
-        <div className="container">
-          <div className="social-wall-header">
-            <h2>Join Our Community</h2>
-            <p>Follow our journey of laughter and wellness on social media.</p>
+                <h3>{product.name}</h3>
+                <Link to="/shop" className="btn-organic">View</Link>
+              </div>
+            ))}
           </div>
           
-          <div className="social-wall-grid">
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="social-wall-card insta-card">
-              <div className="social-wall-icon">📷</div>
-              <h3>Instagram Reels & Highlights</h3>
-              <p>Watch our daily doses of laughter and behind-the-scenes of our heritage kitchen.</p>
-              <span className="social-wall-cta">Follow @veena_kunwar ➔</span>
-            </a>
-            
-            <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="social-wall-card fb-card">
-              <div className="social-wall-icon">📘</div>
-              <h3>Facebook Community</h3>
-              <p>Connect with fellow practitioners and get updates on our latest sessions and products.</p>
-              <span className="social-wall-cta">Join the Group ➔</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Dynamic Testimonials */}
-      <section className="section testimonials-blast">
-        <div className="container">
-          <h2 className="section-title" style={{color: 'white'}}>Words of Joy</h2>
-          {testimonialsLoading ? (
-            <Loader />
-          ) : testimonials.length > 0 ? (
-            <div className="testimonials-masonry">
-              {testimonials.slice(0, 3).map((testimonial) => (
-                <div key={testimonial.id} className="testimonial-blast-card">
-                  <div className="quote-icon">"</div>
-                  <p className="testimonial-text">{testimonial.text}</p>
-                  <p className="testimonial-author">— {testimonial.author}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-data" style={{color: 'white'}}>
-              <p>Join us and be the first to share your experience!</p>
-            </div>
-          )}
         </div>
       </section>
 
