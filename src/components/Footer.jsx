@@ -5,7 +5,7 @@ import './Footer.css'
 function Footer() {
   return (
     <footer className="footer">
-      <div className="container">
+      <div className="mag-container">
         <div className="footer-content">
           <div className="footer-section">
             <h3>Hasya Yoga</h3>

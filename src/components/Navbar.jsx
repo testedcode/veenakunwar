@@ -7,7 +7,7 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="container">
+      <div className="mag-container">
         <div className="navbar-content">
 
           {/* LOGO + TEXT */}

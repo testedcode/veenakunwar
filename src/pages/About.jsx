@@ -1,98 +1,81 @@
-import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './About.css'
 
 function About() {
-  const scrollRef = useRef(null)
-
-  useEffect(() => {
-    // Simple parallax effect for elements with data-speed
-    const handleScroll = () => {
-      if (!scrollRef.current) return
-      const elements = scrollRef.current.querySelectorAll('[data-speed]')
-      
-      elements.forEach(el => {
-        const speed = el.getAttribute('data-speed')
-        const yPos = -(window.scrollY * speed)
-        el.style.transform = `translateY(${yPos}px)`
-      })
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
-    <div className="about-radical" ref={scrollRef}>
+    <div className="about-magazine">
       
-      {/* Chapter 1: The Struggle */}
-      <section className="about-chapter chapter-struggle organic-section">
-        <div className="fluid-container">
-          <div className="text-layer" data-speed="0.2">
-            <h1 className="chapter-title">The Depth of <br/> The Valley</h1>
-          </div>
-          
-          <div className="content-layer">
-            <div className="story-block" data-speed="-0.1">
-              <p className="story-lead">Before the laughter, there was silence.</p>
-              <p className="story-text">
-                Asthma. Severe arthritis (Gathiya). A painful knee replacement. 
-                The physical toll was immense, pulling the spirit down into a valley of endless medical appointments and limitations. 
-                When your body fights against you every day, finding joy feels like an impossible climb.
+      <section className="mag-section about-hero">
+        <div className="mag-container text-center">
+          <h4>The Founder's Story</h4>
+          <h1>A Journey Through <br/> Resilience</h1>
+        </div>
+      </section>
+
+      {/* Section 1: The Medical Struggles */}
+      <section className="mag-section">
+        <div className="mag-container">
+          <div className="grid-2-col">
+            <div className="about-text-content">
+              <h4>01. The Valley</h4>
+              <h2>Before the Laughter, There Was Silence.</h2>
+              <p>
+                Life has a way of testing our limits. For Veena, the test came in the form of severe asthma, crippling arthritis (Gathiya), and eventually, a painful knee replacement.
+              </p>
+              <p>
+                The physical toll was immense. When your body fights against you every day, finding joy feels like an impossible climb. The days were filled with medical appointments, limitations, and a deep longing for the vitality of youth.
               </p>
             </div>
-            <div className="abstract-shape shape-1 animate-float"></div>
+            <div className="mag-image-frame portrait-frame">
+              <img src="/profile.jpg" alt="Medical Struggle and Resilience" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Chapter 2: The Awakening (Yoga) */}
-      <section className="about-chapter chapter-awakening organic-section">
-        <div className="fluid-container">
-          <div className="awakening-grid">
-            <div className="image-column" data-speed="0.15">
-              {/* Replace with a real portrait of Veena doing yoga or smiling */}
-              <div className="organic-image-mask">
-                <img src="/profile.jpg" alt="Veena Kunwar" />
-              </div>
+      {/* Section 2: Yoga Recovery */}
+      <section className="mag-section mag-bg-contrast">
+        <div className="mag-container">
+          <div className="text-center" style={{ marginBottom: '4rem', maxWidth: '800px', margin: '0 auto 4rem' }}>
+            <h4>02. The Awakening</h4>
+            <h2>Breathing Life Back</h2>
+            <p>
+              Then came Hasya Yoga. It wasn't about complex postures; it was about the fundamental human act of laughing. Laughter forced the breath deep into the lungs, challenging the asthma. The gentle, joyful movements coaxed the stiff joints back to life.
+            </p>
+          </div>
+          
+          <div className="grid-3-col">
+            <div className="mag-image-frame">
+              <img src="/gallery-placeholder.jpg" alt="Yoga Session 1" />
             </div>
-            
-            <div className="text-column" data-speed="-0.05">
-              <h2 className="chapter-title">Breathing <br/> Life Back</h2>
-              <p className="story-text">
-                Then came Hasya Yoga. It wasn't about complex postures; it was about the fundamental human act of laughing. 
-                Laughter forced the breath deep into the lungs, challenging the asthma. The gentle, joyful movements coaxed the stiff joints back to life.
-              </p>
-              <p className="story-text highlight-text">
-                Yoga wasn't just a practice; it was a resurrection.
-              </p>
+            <div className="mag-image-frame">
+              <img src="/profile.jpg" alt="Yoga Session 2" />
+            </div>
+            <div className="mag-image-frame">
+              <img src="/gallery-placeholder.jpg" alt="Yoga Session 3" />
             </div>
           </div>
         </div>
-        <div className="abstract-shape shape-2"></div>
       </section>
 
-      {/* Chapter 3: The Transformation (Food) */}
-      <section className="about-chapter chapter-nourishment organic-section">
-        <div className="fluid-container">
-          <div className="text-layer center-text" data-speed="0.1">
-            <h2 className="chapter-title">From Healing <br/> to Nourishing</h2>
-          </div>
-          
-          <div className="nourishment-layout">
-            <div className="story-block wide" data-speed="0">
-              <p className="story-text">
-                A healthy mind and a recovering body demanded a new lifestyle. The journey didn't stop on the yoga mat. 
-                Exploring truly healthy habits meant returning to our roots. It meant rejecting processed, artificial snacks and bringing back the purity of home-cooked heritage foods.
+      {/* Section 3: Transition to Food */}
+      <section className="mag-section">
+        <div className="mag-container">
+          <div className="about-food-layout">
+            <div className="mag-image-frame full-width-frame">
+              <img src="/thekuwa.jpg" alt="Heritage Kitchen" />
+            </div>
+            <div className="food-text-card">
+              <h4>03. The Nourishment</h4>
+              <h2>From Healing to Nourishing</h2>
+              <p>
+                A healthy mind and a recovering body demanded a new lifestyle. The journey didn't stop on the yoga mat. Exploring truly healthy habits meant returning to our roots. It meant rejecting processed, artificial snacks and bringing back the purity of home-cooked heritage foods.
               </p>
-              <p className="story-text">
-                Every batch of Thekwa, every piece of Nimki is kneaded with the same dedication that healed a broken body. 
-                Made with Sudh Desi Ghee and boundless love, this is more than food. It's a prescription for a joyful, healthy life.
+              <p>
+                Every batch of Thekwa, every piece of Nimki is kneaded with the same dedication that healed a broken body. Made with Sudh Desi Ghee and boundless love.
               </p>
-              
-              <div className="chapter-actions">
-                <Link to="/sessions" className="btn-organic">Experience the Laughter</Link>
-                <Link to="/shop" className="btn-solid">Taste the Love</Link>
+              <div style={{ marginTop: '2rem' }}>
+                <Link to="/shop" className="btn-mag-solid">Explore the Pantry</Link>
               </div>
             </div>
           </div>

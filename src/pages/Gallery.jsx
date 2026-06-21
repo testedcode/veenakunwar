@@ -23,54 +23,57 @@ function Gallery() {
   }
 
   return (
-    <div className="gallery-radical">
-      <section className="gallery-organic-hero organic-section">
-        <div className="fluid-container text-center">
-          <h1 className="hero-title">Visual Symphony</h1>
-          <p className="hero-subtitle" style={{color: 'var(--text-light)', margin: '0 auto'}}>
-            Moments of joy, deep breathing, and heritage celebrations captured in time.
+    <div className="gallery-magazine">
+      <section className="mag-section gallery-hero">
+        <div className="mag-container text-center">
+          <h4>Visual Archive</h4>
+          <h1>Gallery</h1>
+          <p style={{ maxWidth: '600px', margin: '0 auto' }}>
+            A structured collection capturing the essence of Hasya Yoga and the purity of our Heritage Kitchen.
           </p>
         </div>
       </section>
 
-      <section className="gallery-masonry-section organic-section">
-        <div className="fluid-container">
+      <section className="mag-section">
+        <div className="mag-container">
           {loading ? (
-            <div className="loader-organic"></div>
+            <div className="text-center" style={{ padding: '4rem 0' }}>
+              <Loader />
+            </div>
           ) : urls.length > 0 ? (
-            <div className="masonry-grid">
+            <div className="mag-masonry-grid">
               {urls.map((item, index) => (
                 <div 
                   key={index} 
-                  className={`masonry-item ${index % 3 === 0 ? 'large' : 'small'}`} 
+                  className="mag-masonry-item"
                   onClick={() => openLightbox(item)}
                 >
-                  <div className="masonry-img-wrap">
+                  <div className="mag-image-frame">
                     <img src={item.url} alt={`Gallery ${index + 1}`} loading="lazy" />
-                    <div className="masonry-overlay">
-                      <span className="expand-icon">Expand</span>
+                    <div className="mag-masonry-overlay">
+                      <span>View</span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="no-images text-center">
-              <p>Visual moments are being collected. Check back later.</p>
+            <div className="text-center" style={{ padding: '4rem 0' }}>
+              <p>The visual archive is currently empty.</p>
             </div>
           )}
         </div>
       </section>
 
       {selectedImage && (
-        <div className="cinematic-lightbox" onClick={closeLightbox}>
+        <div className="mag-lightbox" onClick={closeLightbox}>
           <button className="lightbox-close" onClick={closeLightbox}>×</button>
           
           <button 
             className="lightbox-nav prev" 
             onClick={(e) => { e.stopPropagation(); navigateImage('prev') }}
           >
-            ‹
+            Prev
           </button>
           
           <div className="lightbox-content-wrap" onClick={(e) => e.stopPropagation()}>
@@ -81,7 +84,7 @@ function Gallery() {
             className="lightbox-nav next" 
             onClick={(e) => { e.stopPropagation(); navigateImage('next') }}
           >
-            ›
+            Next
           </button>
         </div>
       )}

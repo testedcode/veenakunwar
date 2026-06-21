@@ -1,162 +1,114 @@
-.gallery-radical {
-  background-color: var(--bg-light);
+.gallery-magazine {
+  background: var(--mag-bg);
   min-height: 100vh;
 }
 
-.gallery-organic-hero {
-  padding-top: 150px;
-  padding-bottom: 50px;
-  min-height: auto;
+.gallery-hero {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--mag-border);
 }
 
-.masonry-grid {
+.mag-masonry-grid {
   column-count: 3;
-  column-gap: 2rem;
-  padding-bottom: 100px;
+  column-gap: var(--space-md);
 }
 
-.masonry-item {
+.mag-masonry-item {
   break-inside: avoid;
-  margin-bottom: 2rem;
-  position: relative;
-  border-radius: 20px 100px 20px 100px; /* Organic border */
-  overflow: hidden;
+  margin-bottom: var(--space-md);
   cursor: pointer;
-  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.masonry-item:hover {
-  transform: scale(0.98) translateY(-5px);
-}
-
-.masonry-item.large {
-  border-radius: 100px 20px 100px 20px;
-}
-
-.masonry-img-wrap {
   position: relative;
+}
+
+.mag-masonry-item .mag-image-frame {
   width: 100%;
-  height: 100%;
 }
 
-.masonry-img-wrap img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transition: transform 0.8s ease;
-}
-
-.masonry-item:hover .masonry-img-wrap img {
-  transform: scale(1.05);
-}
-
-.masonry-overlay {
+.mag-masonry-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(26, 31, 22, 0.4);
-  opacity: 0;
+  background: rgba(17, 17, 17, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.masonry-item:hover .masonry-overlay {
+.mag-masonry-item:hover .mag-masonry-overlay {
   opacity: 1;
 }
 
-.expand-icon {
-  color: var(--yoga-breath);
-  font-family: 'Montserrat', sans-serif;
+.mag-masonry-overlay span {
+  font-family: 'Inter', sans-serif;
+  color: var(--mag-surface);
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.9rem;
-  border: 1px solid var(--yoga-breath);
-  padding: 10px 20px;
-  border-radius: 50px;
-  backdrop-filter: blur(5px);
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--mag-surface);
 }
 
-/* Cinematic Lightbox */
-.cinematic-lightbox {
+/* Lightbox */
+.mag-lightbox {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(26, 31, 22, 0.95);
-  backdrop-filter: blur(15px);
+  background: rgba(17, 17, 17, 0.98);
   z-index: 3000;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.4s ease;
 }
 
 .lightbox-close {
   position: absolute;
-  top: 30px;
-  right: 40px;
-  font-size: 3rem;
-  color: var(--yoga-breath);
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
-
-.lightbox-close:hover {
-  opacity: 1;
-}
-
-.lightbox-content-wrap {
-  max-width: 80vw;
-  max-height: 80vh;
-  position: relative;
-}
-
-.lightbox-content-wrap img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 80vh;
-  object-fit: contain;
-  border-radius: 20px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-  animation: scaleUp 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  top: 2rem; right: 2rem;
+  color: var(--mag-surface);
+  font-size: 2rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  background: transparent;
+  border: none;
 }
 
 .lightbox-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 4rem;
-  color: var(--yoga-breath);
-  opacity: 0.5;
-  padding: 20px;
-  transition: opacity 0.3s ease;
+  color: var(--mag-surface);
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 1rem;
 }
 
-.lightbox-nav:hover {
-  opacity: 1;
+.lightbox-nav.prev { left: 2rem; }
+.lightbox-nav.next { right: 2rem; }
+
+.lightbox-content-wrap {
+  max-width: 80vw;
+  max-height: 80vh;
 }
 
-.lightbox-nav.prev { left: 5%; }
-.lightbox-nav.next { right: 5%; }
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scaleUp {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.lightbox-content-wrap img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
 }
 
 @media (max-width: 992px) {
-  .masonry-grid {
+  .mag-masonry-grid {
     column-count: 2;
   }
 }
 
 @media (max-width: 576px) {
-  .masonry-grid {
+  .mag-masonry-grid {
     column-count: 1;
   }
   .lightbox-nav {
