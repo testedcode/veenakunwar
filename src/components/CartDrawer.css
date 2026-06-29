@@ -1,0 +1,299 @@
+.cart-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0; right: -450px;
+  width: 450px;
+  max-width: 100vw;
+  height: 100vh;
+  background: var(--mag-surface);
+  box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cart-drawer.open {
+  right: 0;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--mag-border);
+}
+
+.cart-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 2.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--mag-text-sub);
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: var(--mag-accent);
+}
+
+.cart-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-cart {
+  text-align: center;
+  margin: auto;
+}
+
+.empty-cart p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.cart-item {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--mag-border);
+}
+
+.cart-item img {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-details h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.variant-name {
+  font-size: 0.85rem;
+  color: var(--mag-text-sub);
+  margin-bottom: 0.5rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid var(--mag-border);
+  width: fit-content;
+  padding: 0.25rem 0.5rem;
+}
+
+.quantity-controls button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.cart-item-price {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cart-item-price p {
+  font-weight: 600;
+  color: var(--mag-text-main);
+  margin: 0;
+}
+
+.remove-item {
+  background: transparent;
+  border: none;
+  color: var(--mag-accent);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.coupon-section {
+  margin-top: 2rem;
+  background: var(--mag-bg);
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.apply-coupon-box {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.apply-coupon-box input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--mag-border);
+  font-family: 'Inter', sans-serif;
+}
+
+.apply-coupon-box button {
+  padding: 0.75rem 1.5rem;
+  background: var(--mag-text-main);
+  color: var(--mag-surface);
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.active-coupon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #2e7d32;
+}
+
+.active-coupon button {
+  background: transparent;
+  border: none;
+  color: var(--mag-accent);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.cart-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--mag-border);
+  background: var(--mag-surface);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--mag-text-sub);
+}
+
+.summary-row.discount {
+  color: #2e7d32;
+}
+
+.summary-row.total {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mag-text-main);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--mag-border);
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+}
+
+/* Payment Step */
+.payment-step {
+  text-align: center;
+}
+
+.payment-instructions {
+  margin-bottom: 2rem;
+}
+
+.qr-container {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--mag-bg);
+  border-radius: 8px;
+}
+
+.payment-qr {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 1rem;
+}
+
+.upi-id {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.upi-apps {
+  margin-bottom: 2rem;
+}
+
+.upi-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: #1a73e8; /* GPay style */
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+/* Receipt Step */
+.receipt-step {
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #2e7d32;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.5rem;
+}
+
+.receipt-step h3 {
+  color: #2e7d32;
+}
+
+.whatsapp-btn {
+  background: #25D366;
+  border-color: #25D366;
+  color: white;
+}
+.whatsapp-btn:hover {
+  background: #128C7E;
+}

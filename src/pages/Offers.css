@@ -1,0 +1,48 @@
+.offers-page {
+  background: var(--mag-bg);
+  min-height: 100vh;
+}
+
+.coupon-card {
+  background: var(--mag-surface);
+  border: 1px dashed var(--mag-accent);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.coupon-card:hover {
+  transform: translateY(-5px);
+}
+
+.coupon-header {
+  background: var(--mag-accent);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.coupon-header h3 {
+  color: white;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 2px;
+  font-size: 1.8rem;
+}
+
+.coupon-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.coupon-body p {
+  font-size: 1.1rem;
+  color: var(--mag-text-main);
+  margin-bottom: 1rem;
+}
+
+.coupon-body .min-order {
+  font-size: 0.9rem;
+  color: var(--mag-text-sub);
+  margin-bottom: 2rem;
+}

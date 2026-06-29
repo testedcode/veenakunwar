@@ -1,40 +1,54 @@
-import { Link, useLocation } from "react-router-dom";
-import "./Navbar.css";
+import { Link, useLocation } from 'react-router-dom'
+import { useCart } from '../contexts/CartContext'
+import './Navbar.css'
 
 function Navbar() {
-  const location = useLocation();
-  const isActive = (path) => location.pathname === path;
+  const location = useLocation()
+  const { cart, toggleCart } = useCart()
+
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <nav className="navbar">
+    <nav className="navbar glossy-nav">
       <div className="mag-container">
         <div className="navbar-content">
-
-          {/* LOGO + TEXT */}
           <Link to="/" className="navbar-brand">
-            <img
-              src="/assets/placeholders/logo2.png"
-              alt="Hasya Yoga by Veena Logo"
-              className="navbar-logo"
-            />
-            <span className="brand-text">Hasya Yoga by Veena</span>
+            <span className="brand-text">Hasya Yoga</span>
           </Link>
-
-          {/* MENU */}
+          
           <ul className="navbar-menu">
-            <li><Link to="/" className={isActive("/") ? "active" : ""}>Home</Link></li>
-            <li><Link to="/about" className={isActive("/about") ? "active" : ""}>About</Link></li>
-            <li><Link to="/sessions" className={isActive("/sessions") ? "active" : ""}>Sessions</Link></li>
-            <li><Link to="/shop" className={isActive("/shop") ? "active" : ""}>Shop</Link></li>
-            <li><Link to="/gallery" className={isActive("/gallery") ? "active" : ""}>Gallery</Link></li>
-            <li><Link to="/social" className={isActive("/social") ? "active" : ""}>Social</Link></li>
-            <li><Link to="/contact" className={isActive("/contact") ? "active" : ""}>Contact</Link></li>
+            <li>
+              <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>
+                The Story
+              </Link>
+            </li>
+            <li>
+              <Link to="/shop" className={location.pathname === '/shop' ? 'active' : ''}>
+                Heritage Pantry
+              </Link>
+            </li>
+            <li>
+              <Link to="/sessions" className={location.pathname === '/sessions' ? 'active' : ''}>
+                Yoga Sessions
+              </Link>
+            </li>
+            <li>
+              <Link to="/gallery" className={location.pathname === '/gallery' ? 'active' : ''}>
+                Visuals
+              </Link>
+            </li>
           </ul>
 
+          <div className="navbar-actions">
+            <button className="cart-toggle-btn" onClick={toggleCart}>
+              <span>Pantry</span>
+              {cartItemCount > 0 && <span className="cart-badge">{cartItemCount}</span>}
+            </button>
+          </div>
         </div>
       </div>
     </nav>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar
