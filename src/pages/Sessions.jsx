@@ -1,102 +1,65 @@
-import { useCollection } from '../hooks/useFirebase'
-import Card from '../components/Card'
-import Loader from '../components/Loader'
-import Button from '../components/Button'
+import { Link } from 'react-router-dom'
 import './Sessions.css'
 
 function Sessions() {
-  const { data: sessions, loading } = useCollection('sessions')
-
-  const handleJoinZoom = (zoomLink) => {
-    if (zoomLink) {
-      window.open(zoomLink, '_blank')
-    } else {
-      alert('Zoom link not available. Please contact us for session details.')
-    }
-  }
-
-  const groupSessionsByDay = (sessions) => {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    const grouped = {}
-    
-    days.forEach(day => {
-      grouped[day] = sessions.filter(session => 
-        session.day && session.day.toLowerCase() === day.toLowerCase()
-      )
-    })
-    
-    return grouped
-  }
-
-  const groupedSessions = sessions ? groupSessionsByDay(sessions) : {}
-
   return (
-    <div className="sessions">
-      <section className="sessions-hero">
-        <div className="container">
-          <h1>Yoga Sessions & Schedule</h1>
-          <p className="hero-subtitle">Join us for transformative Hasya Yoga sessions</p>
+    <div className="sessions-page">
+      <section className="mag-section hero-mag-section text-center" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/assets/yoga2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }}>
+        <div className="mag-container" data-aos="fade-up">
+          <h4 style={{color: '#fff'}}>Hasya Yoga by Veena</h4>
+          <h1 style={{color: '#fff'}}>Breathe. Laugh. Heal.</h1>
+          <p style={{color: '#fff'}}>Join our morning sessions to start your day with immense positivity.</p>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
-          {loading ? (
-            <Loader />
-          ) : sessions.length > 0 ? (
-            <>
-              <h2 className="section-title">Weekly Schedule</h2>
-              <div className="sessions-calendar">
-                {Object.entries(groupedSessions).map(([day, daySessions]) => (
-                  daySessions.length > 0 && (
-                    <div key={day} className="day-section">
-                      <h3 className="day-title">{day}</h3>
-                      <div className="sessions-grid">
-                        {daySessions.map((session) => (
-                          <Card key={session.id} className="session-card">
-                            <div className="session-header">
-                              <h4>{session.title || 'Hasya Yoga Session'}</h4>
-                              <span className="session-time">{session.time || 'TBA'}</span>
-                            </div>
-                            {session.description && (
-                              <p className="session-description">{session.description}</p>
-                            )}
-                            <div className="session-actions">
-                              <Button
-                                variant="primary"
-                                onClick={() => handleJoinZoom(session.zoomLink)}
-                              >
-                                Join Zoom Session
-                              </Button>
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                ))}
+      <section className="mag-section">
+        <div className="mag-container">
+          <div className="grid-2-col align-center">
+            <div data-aos="fade-right">
+              <h2 style={{ fontSize: '3rem', marginBottom: '1rem' }}>The Morning Ritual</h2>
+              <p style={{ fontSize: '1.2rem', color: 'var(--mag-text-sub)', marginBottom: '2rem' }}>
+                We believe that health starts from within. While our heritage pantry takes care of your physical nutrition, our morning Hasya (Laughter) Yoga sessions take care of your mental and emotional well-being.
+              </p>
+              
+              <div className="schedule-card shadow-lg">
+                <h3>🗓️ Session Schedule</h3>
+                <p className="schedule-days">Monday to Saturday</p>
+                <div className="time-slots">
+                  <div className="time-slot">
+                    <span className="slot-icon">🌅</span>
+                    <span className="slot-time">5:00 AM - 6:00 AM</span>
+                  </div>
+                  <div className="time-slot">
+                    <span className="slot-icon">☀️</span>
+                    <span className="slot-time">6:00 AM - 7:00 AM</span>
+                  </div>
+                </div>
+                
+                <a 
+                  href="https://zoom.us/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn-mag-solid full-width text-center mt-4"
+                  style={{ display: 'block', fontSize: '1.2rem' }}
+                >
+                  Join via Zoom Link
+                </a>
               </div>
-            </>
-          ) : (
-            <div className="no-sessions">
-              <p>No sessions scheduled at the moment. Please check back soon!</p>
-              <p className="contact-note">For more information, please contact us via WhatsApp or email.</p>
             </div>
-          )}
+
+            <div data-aos="fade-left" className="sessions-image-collage">
+              <img src="/assets/yoga1.jpg" alt="Yoga Session" className="rounded-image shadow-lg" />
+            </div>
+          </div>
         </div>
       </section>
-
-      <section className="section info-section">
-        <div className="container">
-          <div className="info-card glossy-card">
-            <h3>How to Join</h3>
-            <ol>
-              <li>Check the schedule above for available sessions</li>
-              <li>Click "Join Zoom Session" button at the scheduled time</li>
-              <li>Make sure you have Zoom installed or use the web version</li>
-              <li>Come with an open mind and ready to laugh!</li>
-            </ol>
-          </div>
+      
+      {/* Cross-Sell */}
+      <section className="mag-section" style={{ backgroundColor: 'var(--mag-surface)', textAlign: 'center' }}>
+        <div className="mag-container" data-aos="zoom-in">
+          <h2>Fuel Your Practice</h2>
+          <p style={{ marginBottom: '2rem' }}>Pair your healthy morning routine with our whole-wheat, desi ghee snacks.</p>
+          <Link to="/shop" className="btn-mag-outline">Shop Healthy Snacks</Link>
         </div>
       </section>
     </div>
@@ -104,4 +67,3 @@ function Sessions() {
 }
 
 export default Sessions
-
