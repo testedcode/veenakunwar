@@ -11,11 +11,15 @@ export function useCollection(collectionName) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const q = query(collection(db, collectionName), orderBy('createdAt', 'desc'))
-        const querySnapshot = await getDocs(q)
-        const items = []
+        const querySnapshot = await getDocs(collection(db, collectionName))
+        let items = []
         querySnapshot.forEach((doc) => {
           items.push({ id: doc.id, ...doc.data() })
+        })
+        items.sort((a, b) => {
+          const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt ? new Date(a.createdAt).getTime() : 0)
+          const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt ? new Date(b.createdAt).getTime() : 0)
+          return tB - tA
         })
         setData(items)
         setError(null)
