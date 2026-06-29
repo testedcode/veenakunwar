@@ -7,24 +7,27 @@ import './Shop.css'
 function ImageCarousel({ images, productName }) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  if (!images || images.length === 0) {
+  // Filter out undefined/null values
+  const validImages = images ? images.filter(Boolean) : [];
+
+  if (validImages.length === 0) {
     return <img src="/thekuwa.jpg" alt={productName} />
   }
 
-  const nextImg = () => setCurrentIndex((prev) => (prev + 1) % images.length)
-  const prevImg = () => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+  const nextImg = () => setCurrentIndex((prev) => (prev + 1) % validImages.length)
+  const prevImg = () => setCurrentIndex((prev) => (prev - 1 + validImages.length) % validImages.length)
 
   return (
     <div className="carousel-container">
-      <img src={images[currentIndex]} alt={`${productName} - view ${currentIndex + 1}`} />
+      <img src={validImages[currentIndex]} alt={`${productName} - view ${currentIndex + 1}`} />
       
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <>
           <button className="carousel-btn left" onClick={prevImg}>‹</button>
           <button className="carousel-btn right" onClick={nextImg}>›</button>
           
           <div className="carousel-dots">
-            {images.map((_, i) => (
+            {validImages.map((_, i) => (
               <span key={i} className={`dot ${i === currentIndex ? 'active' : ''}`} onClick={() => setCurrentIndex(i)}></span>
             ))}
           </div>

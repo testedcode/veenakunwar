@@ -327,70 +327,93 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
     name: '',
     price: '',
     description: '',
-    imageURL: '',
+    imageURLs: [],
     qrURL: '',
     whatsappMessage: '',
     ingredients: '',
-    isAvailable: true
+    badges: '',
+    isAvailable: true,
+    variants: []
   })
   const [uploading, setUploading] = useState(false)
 
   const handleImageUpload = async (e, type) => {
-    const file = e.target.files[0]
-    if (!file) return
-    
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      alert('File is too large. Maximum size is 10MB.')
-      e.target.value = '' // Reset input
-      return
+    if (type === 'qr') {
+      const file = e.target.files[0]
+      if (!file) return
+      setUploading(true)
+      try {
+        const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+        const fileRef = ref(storage, `qr/${fileName}`)
+        await uploadBytes(fileRef, file)
+        const url = await getDownloadURL(fileRef)
+        setFormData({ ...formData, qrURL: url })
+        alert('QR Code uploaded!')
+      } catch (err) {
+        alert('Upload failed')
+      } finally {
+        setUploading(false)
+      }
+    } else {
+      const files = Array.from(e.target.files)
+      if (files.length === 0) return
+      if (files.length > 10) {
+        alert('Maximum 10 images allowed.')
+        return
+      }
+      setUploading(true)
+      try {
+        const urls = []
+        for (const file of files) {
+          const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+          const fileRef = ref(storage, `product-images/${fileName}`)
+          await uploadBytes(fileRef, file)
+          const url = await getDownloadURL(fileRef)
+          urls.push(url)
+        }
+        setFormData({ ...formData, imageURLs: [...formData.imageURLs, ...urls] })
+        alert(`✅ ${files.length} images uploaded successfully!`)
+      } catch (err) {
+        alert('Upload failed: ' + err.message)
+      } finally {
+        setUploading(false)
+      }
     }
-    
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file.')
-      e.target.value = '' // Reset input
-      return
-    }
-    
-    setUploading(true)
-    const imageType = type === 'qr' ? 'QR Code' : 'Product Image'
-    
-    try {
-      console.log(`Uploading ${imageType}:`, file.name)
-      const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
-      const folder = type === 'qr' ? 'qr' : 'product-images'
-      const fileRef = ref(storage, `${folder}/${fileName}`)
-      
-      console.log('Uploading to:', `${folder}/${fileName}`)
-      await uploadBytes(fileRef, file)
-      console.log('Upload complete, getting URL...')
-      
-      const url = await getDownloadURL(fileRef)
-      console.log('Got URL:', url)
-      
-      setFormData({ ...formData, [type === 'qr' ? 'qrURL' : 'imageURL']: url })
-      alert(`✅ ${imageType} uploaded successfully!`)
-    } catch (err) {
-      console.error('Upload error details:', {
-        code: err.code,
-        message: err.message,
-        fullError: err
-      })
-      const errorMsg = err.message || err.code || 'Unknown error'
-      alert(`Upload failed: ${errorMsg}\n\nCheck browser console (F12) for details.`)
-      e.target.value = '' // Reset input on error
-    } finally {
-      setUploading(false)
-    }
+  }
+
+  const removeImage = (index) => {
+    const updated = [...formData.imageURLs]
+    updated.splice(index, 1)
+    setFormData({ ...formData, imageURLs: updated })
+  }
+
+  const addVariant = () => {
+    setFormData({
+      ...formData,
+      variants: [...formData.variants, { size: '', price: '' }]
+    })
+  }
+
+  const updateVariant = (index, field, value) => {
+    const updated = [...formData.variants]
+    updated[index][field] = value
+    setFormData({ ...formData, variants: updated })
+  }
+
+  const removeVariant = (index) => {
+    const updated = [...formData.variants]
+    updated.splice(index, 1)
+    setFormData({ ...formData, variants: updated })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const productData = {
       ...formData,
-      price: parseFloat(formData.price),
-      ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()) : []
+      price: parseFloat(formData.price) || 0,
+      ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()) : [],
+      badges: formData.badges ? formData.badges.split(',').map(i => i.trim()) : [],
+      variants: formData.variants.map(v => ({ size: v.size, price: parseFloat(v.price) || 0 }))
     }
     if (editing) {
       await onUpdate(editing.id, productData)
@@ -398,7 +421,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
     } else {
       await onAdd(productData)
     }
-    setFormData({ name: '', price: '', description: '', imageURL: '', qrURL: '', whatsappMessage: '', ingredients: '', isAvailable: true })
+    setFormData({ name: '', price: '', description: '', imageURLs: [], qrURL: '', whatsappMessage: '', ingredients: '', badges: '', isAvailable: true, variants: [] })
   }
 
   const handleEdit = (product) => {
@@ -407,11 +430,13 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
       name: product.name || '',
       price: product.price?.toString() || '',
       description: product.description || '',
-      imageURL: product.imageURL || '',
+      imageURLs: product.imageURLs || [],
       qrURL: product.qrURL || '',
       whatsappMessage: product.whatsappMessage || '',
       ingredients: product.ingredients ? product.ingredients.join(', ') : '',
-      isAvailable: product.isAvailable !== false
+      badges: product.badges ? product.badges.join(', ') : '',
+      isAvailable: product.isAvailable !== false,
+      variants: product.variants || []
     })
   }
 
@@ -432,7 +457,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
               />
             </div>
             <div className="form-group">
-              <label>Price (₹)</label>
+              <label>Base Price (₹)</label>
               <input
                 type="number"
                 step="0.01"
@@ -450,6 +475,38 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
               rows="3"
             ></textarea>
           </div>
+          
+          <div className="form-group">
+            <label>Variants (e.g. Sizes &amp; Prices)</label>
+            {formData.variants.map((variant, index) => (
+              <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  placeholder="Size (e.g. 200g)"
+                  value={variant.size}
+                  onChange={(e) => updateVariant(index, 'size', e.target.value)}
+                  style={{ flex: 1 }}
+                  required
+                />
+                <input
+                  type="number"
+                  placeholder="Price (₹)"
+                  step="0.01"
+                  value={variant.price}
+                  onChange={(e) => updateVariant(index, 'price', e.target.value)}
+                  style={{ flex: 1 }}
+                  required
+                />
+                <Button type="button" variant="secondary" onClick={() => removeVariant(index)}>
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="secondary" onClick={addVariant}>
+              + Add Variant
+            </Button>
+          </div>
+
           <div className="form-group">
             <label>Ingredients (comma separated)</label>
             <textarea
@@ -470,16 +527,22 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
           </div>
           <div className="form-row">
             <div className="form-group">
-              <label>Product Image</label>
+              <label>Product Images (Up to 10)</label>
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={(e) => handleImageUpload(e, 'image')}
-                disabled={uploading}
+                disabled={uploading || formData.imageURLs.length >= 10}
               />
-              {formData.imageURL && (
-                <img src={formData.imageURL} alt="Preview" className="image-preview" />
-              )}
+              <div className="image-previews" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                {formData.imageURLs.map((url, idx) => (
+                  <div key={idx} style={{ position: 'relative' }}>
+                    <img src={url} alt={`Preview ${idx+1}`} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                    <button type="button" onClick={() => removeImage(idx)} style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>&times;</button>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="form-group">
               <label>QR Code</label>
@@ -490,7 +553,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
                 disabled={uploading}
               />
               {formData.qrURL && (
-                <img src={formData.qrURL} alt="QR Preview" className="image-preview" />
+                <img src={formData.qrURL} alt="QR Preview" className="image-preview" style={{ marginTop: '10px', maxWidth: '100px' }} />
               )}
             </div>
           </div>
@@ -505,7 +568,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
           </div>
           {uploading && (
             <p style={{ color: 'var(--primary-blue)', fontWeight: 'bold' }}>
-              Uploading image... Please wait.
+              Uploading image(s)... Please wait.
             </p>
           )}
           <div className="form-actions">
@@ -515,7 +578,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
             {editing && (
               <Button type="button" variant="secondary" onClick={() => {
                 setEditing(null)
-                setFormData({ name: '', price: '', description: '', imageURL: '', qrURL: '', whatsappMessage: '' })
+                setFormData({ name: '', price: '', description: '', imageURLs: [], qrURL: '', whatsappMessage: '', ingredients: '', isAvailable: true, variants: [] })
               }}>
                 Cancel
               </Button>
@@ -528,28 +591,35 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
         <h3>Existing Products</h3>
         {products.length > 0 ? (
           <div className="list-items">
-            {products.map((product) => (
-              <Card key={product.id} className="list-item">
-                <div className="item-content">
-                  {product.imageURL && (
-                    <img src={product.imageURL} alt={product.name} className="item-image" />
-                  )}
-                  <div>
-                    <h4>{product.name}</h4>
-                    <p><strong>Price:</strong> ₹{product.price}</p>
-                    {product.description && <p>{product.description}</p>}
+            {products.map((product) => {
+              // Backward compatibility for display
+              const displayImage = (product.imageURLs && product.imageURLs.length > 0) ? product.imageURLs[0] : product.imageURL;
+              return (
+                <Card key={product.id} className="list-item">
+                  <div className="item-content">
+                    {displayImage && (
+                      <img src={displayImage} alt={product.name} className="item-image" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }} />
+                    )}
+                    <div>
+                      <h4>{product.name}</h4>
+                      <p><strong>Base Price:</strong> ₹{product.price}</p>
+                      {product.variants && product.variants.length > 0 && (
+                        <p><strong>Variants:</strong> {product.variants.map(v => `${v.size} (₹${v.price})`).join(', ')}</p>
+                      )}
+                      {product.description && <p>{product.description}</p>}
+                    </div>
                   </div>
-                </div>
-                <div className="item-actions">
-                  <Button variant="secondary" onClick={() => handleEdit(product)}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" onClick={() => onDelete(product.id)}>
-                    Delete
-                  </Button>
-                </div>
-              </Card>
-            ))}
+                  <div className="item-actions">
+                    <Button variant="secondary" onClick={() => handleEdit(product)}>
+                      Edit
+                    </Button>
+                    <Button variant="secondary" onClick={() => onDelete(product.id)}>
+                      Delete
+                    </Button>
+                  </div>
+                </Card>
+              )
+            })}
           </div>
         ) : (
           <p>No products yet. Add your first product above.</p>

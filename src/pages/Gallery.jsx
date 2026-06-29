@@ -8,7 +8,6 @@ function Gallery() {
     '/assets/yoga1.jpg',
     '/assets/food2.jpg',
     '/assets/yoga2.jpg',
-    '/assets/food3.jpg',
     '/assets/food4.jpg'
   ]
 

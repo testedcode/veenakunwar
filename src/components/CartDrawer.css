@@ -297,3 +297,11 @@
 .whatsapp-btn:hover {
   background: #128C7E;
 }
+
+.receipt-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
