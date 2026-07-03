@@ -1,7 +1,56 @@
 import { useState, useEffect } from 'react'
 import { db, storage } from '../firebase'
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, orderBy } from 'firebase/firestore'
+import { collection, getDocsFromServer, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage'
+
+const FETCH_TIMEOUT_MS = 15000
+
+function withTimeout(promise, ms, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error(message)), ms)
+    }),
+  ])
+}
+
+function formatFirestoreError(err) {
+  const code = err?.code || ''
+  const message = err?.message || 'Unknown Firestore error'
+
+  if (code === 'not-found' || message.includes('NOT_FOUND')) {
+    return 'Firestore database is not set up. In Firebase Console open Firestore Database and click Create database (production mode, region: asia-south1 or closest to India).'
+  }
+  if (code === 'permission-denied') {
+    return 'Firestore denied read access. Update Firestore security rules to allow public read on products/sessions or sign in as admin.'
+  }
+  if (message.includes('timed out')) {
+    return message
+  }
+  return message
+}
+
+async function fetchCollectionDocs(collectionName) {
+  const colRef = collection(db, collectionName)
+  const querySnapshot = await withTimeout(
+    getDocsFromServer(colRef),
+    FETCH_TIMEOUT_MS,
+    'Firestore request timed out. Check Firebase project veenakunwar-50d5d and your network.'
+  )
+
+  const items = []
+  querySnapshot.forEach((docSnap) => {
+    items.push({ id: docSnap.id, ...docSnap.data() })
+  })
+
+  items.sort((a, b) => {
+    const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt ? new Date(a.createdAt).getTime() : 0)
+    const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt ? new Date(b.createdAt).getTime() : 0)
+    return tB - tA
+  })
+
+  return items
+}
 
 export function useCollection(collectionName) {
   const [data, setData] = useState([])
@@ -9,29 +58,34 @@ export function useCollection(collectionName) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    let cancelled = false
+
     const fetchData = async () => {
+      setLoading(true)
+      setError(null)
+
       try {
-        const querySnapshot = await getDocs(collection(db, collectionName))
-        let items = []
-        querySnapshot.forEach((doc) => {
-          items.push({ id: doc.id, ...doc.data() })
-        })
-        items.sort((a, b) => {
-          const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt ? new Date(a.createdAt).getTime() : 0)
-          const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt ? new Date(b.createdAt).getTime() : 0)
-          return tB - tA
-        })
-        setData(items)
-        setError(null)
+        const items = await fetchCollectionDocs(collectionName)
+        if (!cancelled) {
+          setData(items)
+        }
       } catch (err) {
-        setError(err.message)
-        console.error('Error fetching collection:', err)
+        console.error(`Error fetching ${collectionName}:`, err)
+        if (!cancelled) {
+          setData([])
+          setError(formatFirestoreError(err))
+        }
       } finally {
-        setLoading(false)
+        if (!cancelled) {
+          setLoading(false)
+        }
       }
     }
 
     fetchData()
+    return () => {
+      cancelled = true
+    }
   }, [collectionName])
 
   const add = async (item) => {

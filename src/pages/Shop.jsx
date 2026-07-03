@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useCollection } from '../hooks/useFirebase'
 import { useCart } from '../contexts/CartContext'
+import { normalizeProduct } from '../utils/products'
 import Loader from '../components/Loader'
 import './Shop.css'
 
@@ -38,19 +39,26 @@ function ImageCarousel({ images, productName }) {
 }
 
 function Shop() {
-  const { data: products, loading } = useCollection('products')
+  const { data: products, loading, error } = useCollection('products')
   const { addToCart } = useCart()
   const [selectedVariants, setSelectedVariants] = useState({})
 
+  const normalizedProducts = useMemo(
+    () => (products || []).map(normalizeProduct),
+    [products]
+  )
+
   useEffect(() => {
-    if (products?.length > 0) {
+    if (normalizedProducts.length > 0) {
       const defaults = {}
-      products.forEach(p => {
-        if (p.variants && p.variants.length > 0) defaults[p.id] = p.variants[0]
+      normalizedProducts.forEach((product) => {
+        if (product.variants.length > 0) {
+          defaults[product.id] = product.variants[0]
+        }
       })
       setSelectedVariants(defaults)
     }
-  }, [products])
+  }, [normalizedProducts])
 
   const handleVariantChange = (productId, variant) => {
     setSelectedVariants(prev => ({ ...prev, [productId]: variant }))
@@ -61,7 +69,7 @@ function Shop() {
     if (variant) {
       addToCart(product, variant, 1)
     } else {
-      alert("Please select a size variant first.")
+      alert('Please select a size variant first.')
     }
   }
 
@@ -79,9 +87,20 @@ function Shop() {
         <div className="mag-container">
           {loading ? (
             <div className="text-center py-5"><Loader /></div>
+          ) : error ? (
+            <div className="shop-status-message shop-status-error">
+              <h3>Shop is temporarily unavailable</h3>
+              <p>{error}</p>
+              <p className="shop-status-hint">Backend: Firebase Firestore (not Supabase). After Firestore is created, add products at <strong>/admin</strong>.</p>
+            </div>
+          ) : normalizedProducts.length === 0 ? (
+            <div className="shop-status-message">
+              <h3>No products listed yet</h3>
+              <p>Sign in at <strong>/admin</strong>, open the Products tab, and add items with at least one size/price variant.</p>
+            </div>
           ) : (
             <div className="products-showcase">
-              {products?.map((product, index) => {
+              {normalizedProducts.map((product, index) => {
                 const currentVariant = selectedVariants[product.id]
                 const isReversed = index % 2 !== 0
 

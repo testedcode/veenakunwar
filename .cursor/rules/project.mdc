@@ -1,0 +1,11 @@
+---
+description: Global project rules and guidelines for AI agents
+globs: ["**/*.js", "**/*.jsx", "**/*.css", "**/*.md"]
+---
+# Cursor Project Rules
+
+- Refer to `AGENTS.md` before starting any broad refactor.
+- Absolutely NO hardcoded API keys or passwords in the codebase or git history. Use `import.meta.env` for environment variables.
+- Ensure any visual changes test cleanly against mobile viewports.
+- Always run `npm run build` as the ultimate smoke test before suggesting a push.
+- Do not create scattered markdown guides. Update `docs/DEPLOY.md` or `docs/ADMIN.md` instead.

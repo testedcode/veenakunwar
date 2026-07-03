@@ -413,7 +413,11 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
       price: parseFloat(formData.price) || 0,
       ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()) : [],
       badges: formData.badges ? formData.badges.split(',').map(i => i.trim()) : [],
-      variants: formData.variants.map(v => ({ size: v.size, price: parseFloat(v.price) || 0 }))
+      variants: formData.variants.map((v, index) => ({
+        id: v.id || `variant-${index}`,
+        name: (v.size || v.name || '').trim() || `Option ${index + 1}`,
+        price: parseFloat(v.price) || 0,
+      }))
     }
     if (editing) {
       await onUpdate(editing.id, productData)
@@ -436,7 +440,11 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
       ingredients: product.ingredients ? product.ingredients.join(', ') : '',
       badges: product.badges ? product.badges.join(', ') : '',
       isAvailable: product.isAvailable !== false,
-      variants: product.variants || []
+      variants: (product.variants || []).map((v) => ({
+        id: v.id,
+        size: v.size || v.name || '',
+        price: v.price?.toString() || '',
+      }))
     })
   }
 
@@ -604,7 +612,7 @@ function ProductsPanel({ products, onAdd, onUpdate, onDelete }) {
                       <h4>{product.name}</h4>
                       <p><strong>Base Price:</strong> ₹{product.price}</p>
                       {product.variants && product.variants.length > 0 && (
-                        <p><strong>Variants:</strong> {product.variants.map(v => `${v.size} (₹${v.price})`).join(', ')}</p>
+                        <p><strong>Variants:</strong> {product.variants.map(v => `${v.name || v.size} (₹${v.price})`).join(', ')}</p>
                       )}
                       {product.description && <p>{product.description}</p>}
                     </div>
