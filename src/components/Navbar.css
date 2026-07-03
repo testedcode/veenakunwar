@@ -107,3 +107,8 @@
     display: none; /* In a real app, add a hamburger menu here */
   }
 }
+
+.brand-logo-img {
+  max-height: 50px;
+  width: auto;
+}

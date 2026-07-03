@@ -13,8 +13,7 @@ function Navbar() {
       <div className="mag-container">
         <div className="navbar-content">
           <Link to="/" className="navbar-brand">
-            <span className="brand-text-vk">V<span className="vk-accent">K</span></span>
-            <span className="brand-subtext">VEENA KUNWAR</span>
+            <img src="/logo.png" alt="Veena Kunwar" className="brand-logo-img" onError={(e) => { e.target.onerror = null; e.target.src = '/logo.jpg'; }} />
           </Link>
           
           <ul className="navbar-menu">

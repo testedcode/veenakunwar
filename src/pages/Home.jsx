@@ -1,4 +1,9 @@
 import { Link } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination, EffectCoverflow } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
 import './Home.css'
 
 function Home() {
@@ -83,22 +88,53 @@ function Home() {
         <div className="mag-container text-center">
           <h4 className="vk-accent-text">Community</h4>
           <h2>Words from the Heart</h2>
-          <div className="testimonials-grid">
-            <div className="testimonial-card">
-              <div className="stars">★★★★★</div>
-              <p>"The Thekuwa tastes exactly like my grandmother used to make. Pure ghee, no artificial sweetness. A true masterpiece."</p>
-              <h4>- Anjali M.</h4>
-            </div>
-            <div className="testimonial-card">
-              <div className="stars">★★★★★</div>
-              <p>"Veena's morning Hasya Yoga sessions completely cured my morning stiffness. Combining that with the dry fruit ladoos changed my daily routine."</p>
-              <h4>- Rajesh S.</h4>
-            </div>
-            <div className="testimonial-card">
-              <div className="stars">★★★★★</div>
-              <p>"Finally a brand that actually uses real ingredients. The spiced nimki is so crisp and fresh. Highly recommended."</p>
-              <h4>- Priya K.</h4>
-            </div>
+          <div className="testimonials-carousel-wrapper">
+            <Swiper
+              modules={[Autoplay, Pagination, EffectCoverflow]}
+              effect="coverflow"
+              grabCursor={true}
+              centeredSlides={true}
+              slidesPerView={'auto'}
+              coverflowEffect={{
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+              }}
+              autoplay={{ delay: 4000, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              className="testimonial-swiper"
+            >
+              <SwiperSlide>
+                <div className="testimonial-card">
+                  <div className="stars">★★★★★</div>
+                  <p>"The Thekuwa tastes exactly like my grandmother used to make. Pure ghee, no artificial sweetness. A true masterpiece."</p>
+                  <h4>- Anjali M.</h4>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="testimonial-card">
+                  <div className="stars">★★★★★</div>
+                  <p>"Veena's morning Hasya Yoga sessions completely cured my morning stiffness. Combining that with the dry fruit ladoos changed my daily routine."</p>
+                  <h4>- Rajesh S.</h4>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="testimonial-card">
+                  <div className="stars">★★★★★</div>
+                  <p>"Finally a brand that actually uses real ingredients. The spiced nimki is so crisp and fresh. Highly recommended."</p>
+                  <h4>- Priya K.</h4>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="testimonial-card">
+                  <div className="stars">★★★★★</div>
+                  <p>"The best quality snacks I've had in years. The packaging is premium and the taste is nostalgic. Worth every penny."</p>
+                  <h4>- Suman T.</h4>
+                </div>
+              </SwiperSlide>
+            </Swiper>
           </div>
         </div>
       </section>

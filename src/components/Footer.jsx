@@ -9,16 +9,8 @@ function Footer() {
         
         <div className="footer-top">
           <div className="footer-brand-section">
-            <h2 className="footer-logo">V<span className="vk-accent">K</span></h2>
+            <img src="/logo.png" alt="Veena Kunwar" className="brand-logo-img" onError={(e) => { e.target.onerror = null; e.target.src = '/logo.jpg'; }} />
             <p className="footer-tagline">Heritage. Health. Harmony.</p>
-          </div>
-          <div className="footer-newsletter">
-            <h4>Join the Inner Circle</h4>
-            <p>Exclusive offers, wellness tips, and pantry updates.</p>
-            <div className="newsletter-input-group">
-              <input type="email" placeholder="Your Email Address" />
-              <button className="btn-mag-solid">Subscribe</button>
-            </div>
           </div>
         </div>
 

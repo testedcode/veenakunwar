@@ -104,3 +104,15 @@
     order: 2;
   }
 }
+
+.parallax-img-wrapper {
+  overflow: hidden;
+  border-radius: 4px;
+}
+.parallax-img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  width: 100%;
+}
+.parallax-img-wrapper:hover .parallax-img {
+  transform: scale(1.1) rotate(1deg);
+}
