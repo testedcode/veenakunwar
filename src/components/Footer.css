@@ -1,107 +1,143 @@
-.footer {
-  background-color: var(--mag-surface);
-  border-top: 1px solid var(--mag-border);
-  padding: var(--space-lg) 0 var(--space-md);
-  margin-top: var(--space-xl);
+.footer-vk {
+  background-color: #111;
+  color: #fff;
+  padding: 6rem 0 2rem;
+  border-top: 1px solid #333;
 }
 
-.footer-content {
+.footer-top {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
+  align-items: flex-start;
+  margin-bottom: 4rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid #333;
+  flex-wrap: wrap;
+  gap: 3rem;
 }
 
-.footer-section {
-  flex: 1;
-  min-width: 250px;
-}
-
-.footer-section h3 {
+.footer-logo {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2rem;
-  color: var(--mag-text-main);
-  margin-bottom: var(--space-xs);
+  font-size: 3.5rem;
+  margin: 0 0 10px 0;
+  letter-spacing: 2px;
 }
 
-.footer-section h4 {
+.footer-tagline {
   font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
+  color: #aaa;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--mag-text-main);
-  margin-bottom: var(--space-sm);
-  font-weight: 600;
+  font-size: 0.8rem;
 }
 
-.footer-section p {
-  color: var(--mag-text-sub);
-  font-size: 0.95rem;
-  line-height: 1.6;
+.footer-newsletter h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #fff;
 }
 
-.footer-section ul {
+.footer-newsletter p {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.newsletter-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.newsletter-input-group input {
+  padding: 12px 20px;
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  outline: none;
+  border-radius: 4px;
+  width: 250px;
+}
+
+.newsletter-input-group input:focus {
+  border-color: #8c7355;
+}
+
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.footer-col h4 {
+  font-family: 'Cormorant Garamond', serif;
+  color: #8c7355;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-col ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.footer-section ul li {
-  margin-bottom: 0.5rem;
+.footer-col ul li {
+  margin-bottom: 1rem;
 }
 
-.footer-section ul li a,
-.social-links a {
-  color: var(--mag-text-sub);
+.footer-col ul li a {
+  color: #aaa;
   text-decoration: none;
   font-size: 0.95rem;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.footer-section ul li a:hover,
-.social-links a:hover {
-  color: var(--mag-accent);
-}
-
-.social-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.footer-col ul li a:hover {
+  color: #fff;
+  padding-left: 5px;
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--mag-border);
-  padding-top: var(--space-sm);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-bottom p {
-  color: var(--mag-text-sub);
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+  color: #666;
   font-size: 0.85rem;
-  margin: 0;
 }
 
 .powered-by {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .powered-by-link {
-  color: var(--mag-text-main);
-  font-weight: 500;
+  color: #8c7355;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
 }
 
 .powered-by-link:hover {
-  color: var(--mag-accent);
+  color: #fff;
 }
 
 @media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column;
+  }
+  .newsletter-input-group {
+    flex-direction: column;
+  }
+  .newsletter-input-group input {
+    width: 100%;
+  }
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+    gap: 15px;
   }
 }

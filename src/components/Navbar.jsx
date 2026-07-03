@@ -13,7 +13,8 @@ function Navbar() {
       <div className="mag-container">
         <div className="navbar-content">
           <Link to="/" className="navbar-brand">
-            <span className="brand-text">Hasya Yoga</span>
+            <span className="brand-text-vk">V<span className="vk-accent">K</span></span>
+            <span className="brand-subtext">VEENA KUNWAR</span>
           </Link>
           
           <ul className="navbar-menu">

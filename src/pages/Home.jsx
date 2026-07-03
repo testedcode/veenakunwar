@@ -78,16 +78,28 @@ function Home() {
         </div>
       </section>
 
-      {/* Discount Banner */}
-      <section className="discount-banner" data-aos="zoom-in">
+      {/* Dynamic Testimonials */}
+      <section className="testimonials-section-vk" data-aos="fade-up">
         <div className="mag-container text-center">
-          <h2>Stock up your pantry & save!</h2>
-          <p>Order in bulk to keep your family healthy all month.</p>
-          <div className="discount-pills">
-            <span className="discount-pill">Buy 1KG = <strong>5% OFF</strong></span>
-            <span className="discount-pill">Buy 2KG = <strong>10% OFF</strong></span>
+          <h4 className="vk-accent-text">Community</h4>
+          <h2>Words from the Heart</h2>
+          <div className="testimonials-grid">
+            <div className="testimonial-card">
+              <div className="stars">★★★★★</div>
+              <p>"The Thekuwa tastes exactly like my grandmother used to make. Pure ghee, no artificial sweetness. A true masterpiece."</p>
+              <h4>- Anjali M.</h4>
+            </div>
+            <div className="testimonial-card">
+              <div className="stars">★★★★★</div>
+              <p>"Veena's morning Hasya Yoga sessions completely cured my morning stiffness. Combining that with the dry fruit ladoos changed my daily routine."</p>
+              <h4>- Rajesh S.</h4>
+            </div>
+            <div className="testimonial-card">
+              <div className="stars">★★★★★</div>
+              <p>"Finally a brand that actually uses real ingredients. The spiced nimki is so crisp and fresh. Highly recommended."</p>
+              <h4>- Priya K.</h4>
+            </div>
           </div>
-          <Link to="/offers" className="btn-mag-outline mt-3" style={{borderColor: '#fff', color: '#fff'}}>View All Offers</Link>
         </div>
       </section>
     </div>

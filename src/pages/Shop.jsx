@@ -140,8 +140,8 @@ function Shop() {
                         </div>
                       </div>
 
-                      <div className="discount-callout">
-                        <p>🔥 <strong>Bulk Offer:</strong> Buy 1KG for 5% OFF, Buy 2KG for 10% OFF at checkout!</p>
+                      <div className="discount-banner">
+                        <span>✦ Complimentary Shipping on Orders Over ₹1500</span>
                       </div>
 
                       <div className="price-and-action">
