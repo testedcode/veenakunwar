@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useCollection } from '../hooks/useFirebase'
 import { useCart } from '../contexts/CartContext'
 import { normalizeProduct } from '../utils/products'
@@ -7,32 +7,90 @@ import './Shop.css'
 
 function ImageCarousel({ images, productName }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const timerRef = useRef(null)
 
-  // Filter out undefined/null values
-  const validImages = images ? images.filter(Boolean) : [];
+  const validImages = (images || []).filter(Boolean)
 
-  if (validImages.length === 0) {
-    return <img src="/thekuwa.jpg" alt={productName} />
+  const goTo = (idx) => {
+    if (isAnimating || idx === currentIndex) return
+    setIsAnimating(true)
+    setCurrentIndex(idx)
+    setTimeout(() => setIsAnimating(false), 500)
   }
 
-  const nextImg = () => setCurrentIndex((prev) => (prev + 1) % validImages.length)
-  const prevImg = () => setCurrentIndex((prev) => (prev - 1 + validImages.length) % validImages.length)
+  // Auto-advance every 3.5 seconds
+  useEffect(() => {
+    if (validImages.length <= 1) return
+    timerRef.current = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % validImages.length)
+    }, 3500)
+    return () => clearInterval(timerRef.current)
+  }, [validImages.length])
+
+  const pause = () => clearInterval(timerRef.current)
+  const resume = () => {
+    if (validImages.length <= 1) return
+    timerRef.current = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % validImages.length)
+    }, 3500)
+  }
+
+  if (validImages.length === 0) {
+    return (
+      <div className="carousel-container">
+        <img src="/thekuwa.jpg" alt={productName} className="carousel-main-img" />
+      </div>
+    )
+  }
 
   return (
-    <div className="carousel-container">
-      <img src={validImages[currentIndex]} alt={`${productName} - view ${currentIndex + 1}`} />
-      
+    <div className="carousel-container" onMouseEnter={pause} onMouseLeave={resume}>
+      {/* Main image */}
+      <div className="carousel-main">
+        {validImages.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt={`${productName} – view ${i + 1}`}
+            className={`carousel-main-img ${i === currentIndex ? 'active' : ''}`}
+            loading={i === 0 ? 'eager' : 'lazy'}
+          />
+        ))}
+
+        {validImages.length > 1 && (
+          <>
+            <button
+              className="carousel-btn left"
+              onClick={() => goTo((currentIndex - 1 + validImages.length) % validImages.length)}
+              aria-label="Previous image"
+            >&#8249;</button>
+            <button
+              className="carousel-btn right"
+              onClick={() => goTo((currentIndex + 1) % validImages.length)}
+              aria-label="Next image"
+            >&#8250;</button>
+
+            {/* Counter badge */}
+            <div className="carousel-counter">{currentIndex + 1} / {validImages.length}</div>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnails strip */}
       {validImages.length > 1 && (
-        <>
-          <button className="carousel-btn left" onClick={prevImg}>‹</button>
-          <button className="carousel-btn right" onClick={nextImg}>›</button>
-          
-          <div className="carousel-dots">
-            {validImages.map((_, i) => (
-              <span key={i} className={`dot ${i === currentIndex ? 'active' : ''}`} onClick={() => setCurrentIndex(i)}></span>
-            ))}
-          </div>
-        </>
+        <div className="carousel-thumbs">
+          {validImages.map((src, i) => (
+            <button
+              key={i}
+              className={`carousel-thumb ${i === currentIndex ? 'active' : ''}`}
+              onClick={() => goTo(i)}
+              aria-label={`View image ${i + 1}`}
+            >
+              <img src={src} alt={`${productName} thumbnail ${i + 1}`} loading="lazy" />
+            </button>
+          ))}
+        </div>
       )}
     </div>
   )
