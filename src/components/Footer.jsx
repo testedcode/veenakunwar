@@ -9,7 +9,9 @@ function Footer() {
         
         <div className="footer-top">
           <div className="footer-brand-section">
-            <img src="/logo.png" alt="Veena Kunwar" className="brand-logo-img" onError={(e) => { e.target.onerror = null; e.target.src = '/logo.jpg'; }} />
+            <h2 className="footer-logo">
+              <span className="brand-text-vk-footer">V<span className="vk-accent">K</span></span>
+            </h2>
             <p className="footer-tagline">Heritage. Health. Harmony.</p>
           </div>
         </div>

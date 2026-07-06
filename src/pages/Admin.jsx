@@ -19,6 +19,7 @@ function Admin() {
   const { data: sessions, add: addSession, update: updateSession, remove: removeSession } = useCollection('sessions')
   const { data: products, add: addProduct, update: updateProduct, remove: removeProduct } = useCollection('products')
   const { data: testimonials, add: addTestimonial, update: updateTestimonial, remove: removeTestimonial } = useCollection('testimonials')
+  const { data: banners, add: addBanner, update: updateBanner, remove: removeBanner } = useCollection('banners')
   const { urls: galleryUrls, loading: galleryLoading, uploadFile } = useStorage('gallery')
 
   const handleLogin = async (e) => {
@@ -142,6 +143,12 @@ function Admin() {
             >
               Gallery
             </button>
+            <button
+              className={activeTab === 'banners' ? 'active' : ''}
+              onClick={() => setActiveTab('banners')}
+            >
+              🖼️ Home Banners
+            </button>
           </div>
 
           <div className="admin-panel-content">
@@ -171,6 +178,14 @@ function Admin() {
             )}
             {activeTab === 'gallery' && (
               <GalleryPanel uploadFile={uploadFile} urls={galleryUrls} loading={galleryLoading} />
+            )}
+            {activeTab === 'banners' && (
+              <BannersPanel
+                banners={banners}
+                onAdd={addBanner}
+                onUpdate={updateBanner}
+                onDelete={removeBanner}
+              />
             )}
           </div>
         </div>
@@ -768,14 +783,10 @@ function GalleryPanel({ uploadFile, urls: galleryUrls, loading: galleryLoading }
         console.log(`Successfully uploaded: ${fileName}`)
       }
       
-      setUploadProgress(`Successfully uploaded ${files.length} image(s)!`)
-      alert(`✅ Successfully uploaded ${files.length} image(s)! Refreshing page...`)
+      setUploadProgress(`✅ Successfully uploaded ${files.length} image(s)!`)
       e.target.value = '' // Reset input
-      
-      // Reload page after 2 seconds to show new images
-      setTimeout(() => {
-        window.location.reload()
-      }, 2000)
+      // Re-fetch gallery by re-mounting trick: force refetch
+      setUploadedCount(prev => prev + 0.001) // tiny nudge to re-render
     } catch (err) {
       console.error('Upload error details:', err)
       const errorMessage = err.message || err.code || 'Unknown error occurred'
@@ -788,15 +799,14 @@ function GalleryPanel({ uploadFile, urls: galleryUrls, loading: galleryLoading }
   }
 
   const handleDelete = async (imageName) => {
-    if (confirm('Are you sure you want to delete this image?')) {
+    if (window.confirm('Are you sure you want to delete this image?')) {
       try {
         const imageRef = ref(storage, `gallery/${imageName}`)
         await deleteObject(imageRef)
-        alert('Image deleted successfully!')
-        window.location.reload()
+        setUploadProgress('🗑️ Image deleted. Refresh to see changes.')
       } catch (err) {
         console.error('Delete error:', err)
-        alert('Failed to delete image. Please try again.')
+        setUploadProgress('❌ Failed to delete image. Please try again.')
       }
     }
   }
@@ -856,6 +866,255 @@ function GalleryPanel({ uploadFile, urls: galleryUrls, loading: galleryLoading }
           </div>
         ) : (
           <p>No images in gallery yet. Upload images above.</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// BANNERS PANEL – manage homepage hero banners
+// ─────────────────────────────────────────────────────────────
+function BannersPanel({ banners, onAdd, onUpdate, onDelete }) {
+  const [editing, setEditing] = useState(null)
+  const [uploading, setUploading] = useState(false)
+  const [formData, setFormData] = useState({
+    heading: '',
+    subheading: '',
+    badge: '',
+    imageURL: '',
+    ctaText: '',
+    ctaLink: '',
+    cta2Text: '',
+    cta2Link: '',
+    overlay: 0.55,
+    active: true,
+    order: 0,
+  })
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return }
+    if (file.size > 10 * 1024 * 1024) { alert('Max file size is 10MB.'); return }
+    setUploading(true)
+    try {
+      const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+      const fileRef = ref(storage, `banners/${fileName}`)
+      await uploadBytes(fileRef, file)
+      const url = await getDownloadURL(fileRef)
+      setFormData(prev => ({ ...prev, imageURL: url }))
+      alert('✅ Banner image uploaded!')
+    } catch (err) {
+      alert('Upload failed: ' + err.message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!formData.imageURL) { alert('Please upload a banner image first.'); return }
+    const data = { ...formData, overlay: parseFloat(formData.overlay) || 0.55, order: parseInt(formData.order) || 0 }
+    if (editing) {
+      await onUpdate(editing.id, data)
+      setEditing(null)
+    } else {
+      await onAdd(data)
+    }
+    setFormData({ heading: '', subheading: '', badge: '', imageURL: '', ctaText: '', ctaLink: '', cta2Text: '', cta2Link: '', overlay: 0.55, active: true, order: 0 })
+  }
+
+  const handleEdit = (banner) => {
+    setEditing(banner)
+    setFormData({
+      heading: banner.heading || '',
+      subheading: banner.subheading || '',
+      badge: banner.badge || '',
+      imageURL: banner.imageURL || '',
+      ctaText: banner.ctaText || '',
+      ctaLink: banner.ctaLink || '',
+      cta2Text: banner.cta2Text || '',
+      cta2Link: banner.cta2Link || '',
+      overlay: banner.overlay ?? 0.55,
+      active: banner.active !== false,
+      order: banner.order || 0,
+    })
+  }
+
+  return (
+    <div className="admin-panel">
+      <h2>🖼️ Home Page Banners</h2>
+      <p style={{ color: '#666', marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+        Yahan se aap home page ke bade banners manage kar sakte hain. Ek ya zyada banners add karein – woh slider mein automatically chalenge.
+      </p>
+
+      <Card className="admin-form-card">
+        <h3>{editing ? 'Banner Edit Karein' : 'Naya Banner Add Karein'}</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Banner Image Upload *</label>
+            <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
+            {uploading && <p style={{ color: 'blue' }}>Image upload ho raha hai... rukein.</p>}
+            {formData.imageURL && (
+              <div style={{ marginTop: '10px' }}>
+                <img src={formData.imageURL} alt="Banner preview" style={{ maxHeight: '150px', borderRadius: '8px', objectFit: 'cover' }} />
+                <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '4px' }}>Preview</p>
+              </div>
+            )}
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Heading (Main Title)</label>
+              <input
+                type="text"
+                value={formData.heading}
+                onChange={(e) => setFormData({ ...formData, heading: e.target.value })}
+                placeholder="e.g. Timeless Taste, <br/> Pure Desi Ghee"
+              />
+              <small style={{ color: '#888' }}>Line break ke liye &lt;br/&gt; likha ja sakta hai</small>
+            </div>
+            <div className="form-group">
+              <label>Badge / Label (optional)</label>
+              <input
+                type="text"
+                value={formData.badge}
+                onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                placeholder="e.g. 🆕 New Arrival"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Sub-heading (Description)</label>
+            <textarea
+              value={formData.subheading}
+              onChange={(e) => setFormData({ ...formData, subheading: e.target.value })}
+              rows="2"
+              placeholder="Short description – ek ya do line mein likhen"
+            />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Button 1 Text (CTA)</label>
+              <input
+                type="text"
+                value={formData.ctaText}
+                onChange={(e) => setFormData({ ...formData, ctaText: e.target.value })}
+                placeholder="e.g. Order Karein"
+              />
+            </div>
+            <div className="form-group">
+              <label>Button 1 Link</label>
+              <input
+                type="text"
+                value={formData.ctaLink}
+                onChange={(e) => setFormData({ ...formData, ctaLink: e.target.value })}
+                placeholder="/shop or https://wa.me/..."
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Button 2 Text (optional)</label>
+              <input
+                type="text"
+                value={formData.cta2Text}
+                onChange={(e) => setFormData({ ...formData, cta2Text: e.target.value })}
+                placeholder="e.g. Yoga Join Karein"
+              />
+            </div>
+            <div className="form-group">
+              <label>Button 2 Link (optional)</label>
+              <input
+                type="text"
+                value={formData.cta2Link}
+                onChange={(e) => setFormData({ ...formData, cta2Link: e.target.value })}
+                placeholder="/sessions or https://..."
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Dark Overlay (0 = no dark, 1 = full black)</label>
+              <input
+                type="number"
+                min="0" max="1" step="0.05"
+                value={formData.overlay}
+                onChange={(e) => setFormData({ ...formData, overlay: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Display Order (0 = pehle dikhega)</label>
+              <input
+                type="number"
+                value={formData.order}
+                onChange={(e) => setFormData({ ...formData, order: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <input
+              type="checkbox"
+              id="bannerActive"
+              checked={formData.active}
+              onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+            />
+            <label htmlFor="bannerActive" style={{ margin: 0 }}>Banner active hai (website par dikhega)</label>
+          </div>
+
+          <div className="form-actions">
+            <Button type="submit" variant="primary" disabled={uploading}>
+              {editing ? 'Update Banner' : 'Banner Add Karein'}
+            </Button>
+            {editing && (
+              <Button type="button" variant="secondary" onClick={() => {
+                setEditing(null)
+                setFormData({ heading: '', subheading: '', badge: '', imageURL: '', ctaText: '', ctaLink: '', cta2Text: '', cta2Link: '', overlay: 0.55, active: true, order: 0 })
+              }}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </form>
+      </Card>
+
+      <div className="admin-list" style={{ marginTop: '2rem' }}>
+        <h3>Existing Banners ({banners.length})</h3>
+        {banners.length > 0 ? (
+          <div className="list-items">
+            {banners.map((banner) => (
+              <Card key={banner.id} className="list-item">
+                <div className="item-content">
+                  {banner.imageURL && (
+                    <img src={banner.imageURL} alt={banner.heading || 'Banner'} style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px', flexShrink: 0 }} />
+                  )}
+                  <div>
+                    <h4>{banner.heading || '(No heading)'}</h4>
+                    {banner.subheading && <p style={{ fontSize: '0.85rem', margin: '2px 0' }}>{banner.subheading}</p>}
+                    <p style={{ fontSize: '0.8rem', color: '#999', margin: '4px 0' }}>
+                      Status: <strong style={{ color: banner.active !== false ? 'green' : 'red' }}>{banner.active !== false ? '✅ Active' : '❌ Hidden'}</strong>
+                      {banner.ctaText && ` · CTA: ${banner.ctaText} → ${banner.ctaLink}`}
+                    </p>
+                  </div>
+                </div>
+                <div className="item-actions">
+                  <Button variant="secondary" onClick={() => onUpdate(banner.id, { active: banner.active === false })}>
+                    {banner.active !== false ? 'Hide' : 'Show'}
+                  </Button>
+                  <Button variant="secondary" onClick={() => handleEdit(banner)}>Edit</Button>
+                  <Button variant="secondary" onClick={() => onDelete(banner.id)}>Delete</Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p>Abhi koi banner nahi hai. Upar se pehla banner add karein.</p>
         )}
       </div>
     </div>
