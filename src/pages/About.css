@@ -634,3 +634,10 @@
   .philosophy-pillars { grid-template-columns: 1fr 1fr; }
   .about-cta-section h2 { font-size: 2.2rem; }
 }
+
+/* YouTube section on About page */
+.about-yt-wrap {
+  background: #fdfbf7;
+  padding: 2rem 0 5rem;
+}
+

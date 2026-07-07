@@ -262,6 +262,62 @@
   color: rgba(212, 175, 55, 1);
 }
 
+/* YouTube section inside footer */
+.footer-yt-section {
+  border-top: 1px solid rgba(212, 175, 55, 0.12);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  padding: 0;
+  margin: 0 -0px;
+}
+
+.footer-yt-section .yt-shorts-section {
+  background: transparent;
+  padding: 3rem 0;
+}
+
+.footer-yt-section .yt-title {
+  color: #e8ddd0;
+}
+
+.footer-yt-section .yt-eyebrow {
+  color: #ff5555;
+}
+
+.footer-yt-section .yt-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: none;
+}
+
+.footer-yt-section .yt-card:hover {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.footer-yt-section .yt-card-title { color: #e8ddd0; }
+.footer-yt-section .yt-card-meta  { color: rgba(232,221,208,0.4); }
+
+.footer-yt-section .yt-skel-thumb,
+.footer-yt-section .yt-skel-line {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+}
+
+.footer-yt-section .yt-more-btn {
+  border-color: rgba(255,85,85,0.5);
+  color: #ff5555;
+}
+
+.footer-yt-section .yt-more-btn:hover {
+  background: #ff0000;
+  color: #fff;
+  border-color: #ff0000;
+}
+
+.footer-yt-section .yt-see-more {
+  background: #cc0000;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .footer-top     { flex-direction: column; }

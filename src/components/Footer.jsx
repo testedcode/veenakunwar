@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FACEBOOK_URL, INSTAGRAM_URL, YOUTUBE_URL } from '../utils/constants'
+import YoutubeShorts from './YoutubeShorts'
 import './Footer.css'
 
 function Footer() {
@@ -60,6 +61,11 @@ function Footer() {
               <span>Handmade</span>
             </div>
           </div>
+        </div>
+
+        {/* YouTube Videos Strip */}
+        <div className="footer-yt-section">
+          <YoutubeShorts limit={6} title="Latest Videos" compact={false} />
         </div>
 
         {/* Link columns */}

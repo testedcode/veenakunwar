@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import YoutubeShorts from '../components/YoutubeShorts'
 import './About.css'
 
 const PROFILE_IMAGES = [
@@ -276,6 +277,12 @@ function About() {
             <Link to="/sessions" className="btn-mag-solid">Join Yoga Sessions</Link>
             <Link to="/shop" className="btn-mag-outline">Shop Now</Link>
           </div>
+        </div>
+      </section>
+      {/* ── YOUTUBE VIDEOS ── */}
+      <section className="about-yt-wrap">
+        <div className="mag-container">
+          <YoutubeShorts limit={10} title="Watch Veena's Videos" />
         </div>
       </section>
 
