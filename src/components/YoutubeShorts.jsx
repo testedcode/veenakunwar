@@ -34,6 +34,7 @@ function parseRSS(xmlText) {
                       entry.querySelector('id')?.textContent?.split(':').pop() || ''
     const title     = entry.querySelector('title')?.textContent || ''
     const published = entry.querySelector('published')?.textContent || ''
+    // Use hqdefault as fallback for shorts usually
     const thumb     = entry.querySelector('thumbnail')?.getAttribute('url') ||
                       `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
     const views     = entry.querySelector('statistics')?.getAttribute('viewCount') || '0'
@@ -52,13 +53,8 @@ const YTIcon = ({ size = 20 }) => (
 /* ── Skeleton card ── */
 function Skeleton() {
   return (
-    <div className="yt-skeleton">
-      <div className="yt-skel-thumb" />
-      <div className="yt-skel-body">
-        <div className="yt-skel-line w90" />
-        <div className="yt-skel-line w60" />
-        <div className="yt-skel-line w40" />
-      </div>
+    <div className="yt-short-card skeleton">
+      <div className="yt-skel-bg"></div>
     </div>
   )
 }
@@ -106,12 +102,11 @@ function PromoBanner() {
 }
 
 /* ── Main component ── */
-export default function YoutubeShorts({ limit = 10, title = 'Recent Videos' }) {
+export default function YoutubeShorts({ limit = 10, title = 'Recent Shorts' }) {
   const [videos,  setVideos]  = useState([])
   const [loading, setLoading] = useState(true)
   const [error,   setError]   = useState(null)
-  const [active,  setActive]  = useState(0)   // featured video index
-  const [playing, setPlaying] = useState(false)
+  const [playingId, setPlayingId] = useState(null)
   const scrollRef = useRef(null)
 
   useEffect(() => {
@@ -130,221 +125,99 @@ export default function YoutubeShorts({ limit = 10, title = 'Recent Videos' }) {
     return () => controller.abort()
   }, [limit])
 
-  const featuredVideo = videos[active] || null
-
-  /* arrow scroll for mobile carousel */
+  /* arrow scroll for carousel */
   const scroll = (dir) => {
     if (!scrollRef.current) return
-    scrollRef.current.scrollBy({ left: dir * 260, behavior: 'smooth' })
-  }
-
-  /* jump to a video in the carousel */
-  const selectVideo = (idx) => {
-    setActive(idx)
-    setPlaying(false)
-    // scroll the row item into view
-    const row = scrollRef.current
-    if (row) {
-      const card = row.children[idx]
-      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
-    }
+    // Scroll by roughly 2 cards width
+    scrollRef.current.scrollBy({ left: dir * 500, behavior: 'smooth' })
   }
 
   return (
-    <section className="yt-section" aria-label="YouTube Videos from Veena Kunwar">
+    <section className="yt-section" aria-label="YouTube Shorts from Veena Kunwar">
 
       {/* ── Header ── */}
       <div className="yt-header">
         <div className="yt-header-left">
           <span className="yt-eyebrow">
             <YTIcon size={14} />
-            On YouTube
+            On YouTube Shorts
           </span>
           <h2 className="yt-title">{title}</h2>
         </div>
-        <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer" className="yt-btn-red">
-          <YTIcon size={16} />
-          View Channel
-        </a>
+        <div className="yt-header-actions">
+          <button className="yt-arrow" onClick={() => scroll(-1)} aria-label="Previous">‹</button>
+          <button className="yt-arrow" onClick={() => scroll(1)}  aria-label="Next">›</button>
+        </div>
       </div>
 
       {/* ── Promo banner ── */}
       <PromoBanner />
 
-      {/* ── Loading ── */}
-      {loading && (
-        <div className="yt-skeleton-row">
-          {[...Array(4)].map((_, i) => <Skeleton key={i} />)}
-        </div>
-      )}
+      {/* ── Shorts Carousel ── */}
+      <div className="yt-shorts-carousel" ref={scrollRef}>
+        {loading && (
+           <>
+             {[...Array(6)].map((_, i) => <Skeleton key={i} />)}
+           </>
+        )}
 
-      {/* ── Error ── */}
-      {error && (
-        <div className="yt-error-state">
-          <span>😔</span>
-          <p>Couldn't load videos. <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">Visit our YouTube channel →</a></p>
-        </div>
-      )}
+        {error && (
+          <div className="yt-error-state">
+            <span>😔</span>
+            <p>Couldn't load shorts. <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">Visit our YouTube channel →</a></p>
+          </div>
+        )}
 
-      {/* ── Videos: Featured + List ── */}
-      {!loading && !error && videos.length > 0 && (
-        <div className="yt-layout">
-
-          {/* Featured player */}
-          <div className="yt-featured">
-            <div className="yt-featured-player" onClick={() => setPlaying(true)}>
-              {playing ? (
-                <iframe
-                  key={featuredVideo.videoId}
-                  src={`https://www.youtube.com/embed/${featuredVideo.videoId}?autoplay=1&rel=0`}
-                  title={featuredVideo.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="yt-player-iframe"
+        {!loading && !error && videos.length > 0 && videos.map((v) => (
+          <div key={v.videoId} className="yt-short-card">
+            {playingId === v.videoId ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${v.videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                title={v.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="yt-short-iframe"
+              />
+            ) : (
+              <div className="yt-short-thumb-wrap" onClick={() => setPlayingId(v.videoId)}>
+                {/* Fallback to high res thumbnail if maxres fails */}
+                <img
+                  src={`https://i.ytimg.com/vi/${v.videoId}/maxresdefault.jpg`}
+                  alt={v.title}
+                  className="yt-short-thumb"
+                  onError={e => { e.target.src = `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg` }}
+                  loading="lazy"
                 />
-              ) : (
-                <>
-                  <img
-                    src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/maxresdefault.jpg`}
-                    alt={featuredVideo.title}
-                    className="yt-featured-thumb"
-                    onError={e => { e.target.src = `https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg` }}
-                  />
-                  <div className="yt-featured-overlay">
-                    <div className="yt-big-play">
-                      <svg viewBox="0 0 24 24" fill="white" width="38" height="38">
-                        <polygon points="5 3 19 12 5 21 5 3"/>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="yt-new-badge">LATEST</div>
-                </>
-              )}
-            </div>
-            <div className="yt-featured-info">
-              <h3 className="yt-featured-title">{featuredVideo.title}</h3>
-              <div className="yt-featured-meta">
-                {parseInt(featuredVideo.views) > 0 && (
-                  <span className="yt-meta-chip views-chip">
-                    👁 {fmtViews(featuredVideo.views)} views
-                  </span>
-                )}
-                {featuredVideo.published && (
-                  <span className="yt-meta-chip time-chip">
-                    🕐 {timeAgo(featuredVideo.published)}
-                  </span>
-                )}
-              </div>
-              <div className="yt-featured-actions">
-                <a
-                  href={`https://www.youtube.com/watch?v=${featuredVideo.videoId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="yt-watch-link"
-                >
-                  <YTIcon size={16} />
-                  Watch on YouTube
-                </a>
-                <a
-                  href={`https://wa.me/?text=${encodeURIComponent(`Check out this video by Veena Kunwar 🧘‍♀️\nhttps://www.youtube.com/watch?v=${featuredVideo.videoId}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="yt-share-inline"
-                  aria-label="Share on WhatsApp"
-                >
-                  📤 Share
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Playlist / scroll rail */}
-          <div className="yt-playlist-col">
-            <div className="yt-playlist-head">
-              <span>All Videos</span>
-              <span className="yt-count">{videos.length} videos</span>
-            </div>
-
-            <div className="yt-playlist-scroll">
-              {videos.map((v, i) => (
-                <button
-                  key={v.videoId}
-                  className={`yt-pl-item ${i === active ? 'active' : ''}`}
-                  onClick={() => selectVideo(i)}
-                  aria-label={`Play: ${v.title}`}
-                >
-                  <div className="yt-pl-thumb-wrap">
-                    <img
-                      src={`https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg`}
-                      alt={v.title}
-                      className="yt-pl-thumb"
-                      loading="lazy"
-                    />
-                    {i === active && (
-                      <div className="yt-pl-now-playing">
-                        <span /><span /><span />
-                      </div>
-                    )}
-                  </div>
-                  <div className="yt-pl-info">
-                    <p className="yt-pl-title">{v.title}</p>
-                    <div className="yt-pl-meta">
-                      {parseInt(v.views) > 0 && <span>👁 {fmtViews(v.views)}</span>}
-                      {v.published && <span>{timeAgo(v.published)}</span>}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Mobile horizontal scroll strip ── */}
-      {!loading && !error && videos.length > 0 && (
-        <div className="yt-mobile-strip">
-          <div className="yt-strip-header">
-            <span className="yt-strip-label">Swipe to browse</span>
-            <div className="yt-strip-arrows">
-              <button className="yt-arrow" onClick={() => scroll(-1)} aria-label="Previous">‹</button>
-              <button className="yt-arrow" onClick={() => scroll(1)}  aria-label="Next">›</button>
-            </div>
-          </div>
-
-          <div className="yt-scroll-rail" ref={scrollRef}>
-            {videos.map((v, i) => (
-              <div
-                key={v.videoId}
-                className={`yt-scroll-card ${i === active ? 'active' : ''}`}
-                onClick={() => selectVideo(i)}
-              >
-                <div className="yt-scroll-thumb-wrap">
-                  <img
-                    src={`https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg`}
-                    alt={v.title}
-                    loading="lazy"
-                    className="yt-scroll-thumb"
-                  />
-                  <div className="yt-scroll-play">▶</div>
-                  {i === active && <div className="yt-scroll-active-badge">▶ Playing</div>}
+                
+                {/* Gradient overlay for readability */}
+                <div className="yt-short-overlay">
+                   <div className="yt-short-play-btn">
+                     <svg viewBox="0 0 24 24" fill="white" width="36" height="36">
+                       <polygon points="5 3 19 12 5 21 5 3"/>
+                     </svg>
+                   </div>
+                   
+                   <div className="yt-short-info">
+                     <h3 className="yt-short-title">{v.title}</h3>
+                     <div className="yt-short-meta">
+                       {parseInt(v.views) > 0 && <span>👁 {fmtViews(v.views)}</span>}
+                       {v.published && <span>{timeAgo(v.published)}</span>}
+                     </div>
+                   </div>
                 </div>
-                <p className="yt-scroll-title">{v.title}</p>
-                {parseInt(v.views) > 0 && (
-                  <span className="yt-scroll-views">👁 {fmtViews(v.views)}</span>
-                )}
               </div>
-            ))}
+            )}
           </div>
-        </div>
-      )}
+        ))}
+      </div>
 
       {/* ── Footer CTA ── */}
       {!loading && !error && (
         <div className="yt-cta-strip">
           <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer" className="yt-cta-btn">
             <YTIcon size={18} />
-            More Videos — {CHANNEL_HANDLE}
+            View all Shorts — {CHANNEL_HANDLE}
           </a>
         </div>
       )}
